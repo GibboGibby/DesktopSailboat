@@ -6,6 +6,11 @@
 
 #include "Maths.h"
 
+#include "ImGUI/imgui.h"
+#include "ImGUI/imgui_impl_sdl3.h"
+#include "ImGUI/imgui_impl_sdlrenderer3.h"
+#include "SDL3/SDL_opengl.h"
+
 
 void RenderThread(SDL_Window* window, SDL_Renderer* renderer, SDL_Rect* rect);
 
@@ -53,16 +58,28 @@ int main()
 	SDL_Renderer* renderer;
 
 	//SDL_Window* window = SDL_CreateWindow("EpicTest", 200, 200, SDL_WINDOW_TRANSPARENT | SDL_WINDOW_BORDERLESS | SDL_WINDOW_ALWAYS_ON_TOP);
-	SDL_CreateWindowAndRenderer("EpicTest", 300, 300, SDL_WINDOW_TRANSPARENT | SDL_WINDOW_ALWAYS_ON_TOP | SDL_WINDOW_BORDERLESS, &window, &renderer);
+	SDL_CreateWindowAndRenderer("EpicTest", 500, 500, SDL_WINDOW_TRANSPARENT | SDL_WINDOW_ALWAYS_ON_TOP | SDL_WINDOW_BORDERLESS, &window, &renderer);
 
 	if (!window)
 	{
 		SDL_LogCritical(SDL_LOG_CATEGORY_ERROR, SDL_GetError());
 	}
 
+	SDL_ShowWindow(window);
+
 	bool running = true;
 	SDL_Surface* screenSurface = SDL_GetWindowSurface(window);
 
+
+	IMGUI_CHECKVERSION();
+	ImGui::CreateContext();
+	ImGuiIO& io = ImGui::GetIO(); (void)io;
+	io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
+
+	ImGui::StyleColorsDark();
+
+	ImGui_ImplSDL3_InitForSDLRenderer(window, renderer);
+	ImGui_ImplSDLRenderer3_Init(renderer);
 
 	SDL_Rect rect = { 1000,600,100,100 };
 
@@ -76,6 +93,10 @@ int main()
 	int xOffset = 0;
 	int yOffset = 0;
 
+	float randomValue = 0.0f;
+	uint8_t counter = 0;
+	bool randomCheckbox = false;
+
 	while (running)
 	{
 
@@ -84,8 +105,36 @@ int main()
 		SDL_Event event;
 		SDL_PollEvent(&event);
 
-		if (event.type == SDL_EVENT_QUIT)
+		ImGui_ImplSDL3_ProcessEvent(&event);
+
+		if (event.type == SDL_EVENT_QUIT || event.type == SDL_EVENT_WINDOW_CLOSE_REQUESTED && event.window.windowID == SDL_GetWindowID(window))
 			running = false;
+
+		ImGui_ImplSDLRenderer3_NewFrame();
+		ImGui_ImplSDL3_NewFrame();
+		ImGui::NewFrame();
+
+		
+		
+
+		{
+			ImGui::Begin("Hello World!");
+			ImGui::Checkbox("RandomTestCheckbox", &randomCheckbox);
+
+			ImGui::SliderFloat("Float Slider", &randomValue, 0.0f, 10.0f);
+
+			if (ImGui::Button("Button"))
+			{
+				counter++;
+			}
+			ImGui::SameLine();
+			ImGui::Text("Counter = %d", counter);
+
+			ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / io.Framerate, io.Framerate);
+			ImGui::End();
+		}
+
+
 
 		if (event.type == SDL_EVENT_KEY_DOWN)
 		{
@@ -177,6 +226,33 @@ int main()
 
 
 		//RENDER
+
+		ImGui::Render();
+
+		SDL_SetRenderDrawColor(renderer, 0x00, 0x00, 0x00, 0x00);
+		SDL_RenderClear(renderer);
+
+		ImGui_ImplSDLRenderer3_RenderDrawData(ImGui::GetDrawData(), renderer);
+		SDL_SetRenderDrawColor(renderer, 0x00, 0x00, 0xFF, 0xFF);
+
+		//SDL_RenderRect(renderer, NULL);
+
+		//SDL_FRect rect = { 1000, 600, 100, 100 };
+
+		SDL_FRect tRect = { pRect->x, pRect->y, pRect->w, pRect->h };
+
+		int x, y;
+		SDL_GetWindowPosition(window, &x, &y);
+
+
+		tRect.x -= x;
+		tRect.y -= y;
+
+		SDL_RenderFillRect(renderer, &tRect);
+		//SDL_RenderRect(renderer, &rect);
+
+		SDL_RenderPresent(renderer);
+		
 	}
 
 	TerminateThread(renderThread.native_handle(), 1);
@@ -188,12 +264,11 @@ int main()
 
 void RenderThread(SDL_Window* window, SDL_Renderer* renderer, SDL_Rect* rect)
 {
-
+	/*
 	while (true)
 	{
 		SDL_SetRenderDrawColor(renderer, 0x00, 0x00, 0x00, 0x00);
 		SDL_RenderClear(renderer);
-
 
 		SDL_SetRenderDrawColor(renderer, 0x00, 0x00, 0xFF, 0xFF);
 
@@ -201,7 +276,7 @@ void RenderThread(SDL_Window* window, SDL_Renderer* renderer, SDL_Rect* rect)
 
 		//SDL_FRect rect = { 1000, 600, 100, 100 };
 
-		SDL_FRect tRect  = { rect->x, rect->y, rect->w, rect->h };
+		SDL_FRect tRect = { rect->x, rect->y, rect->w, rect->h };
 
 		int x, y;
 		SDL_GetWindowPosition(window, &x, &y);
@@ -215,4 +290,5 @@ void RenderThread(SDL_Window* window, SDL_Renderer* renderer, SDL_Rect* rect)
 
 		SDL_RenderPresent(renderer);
 	}
+	*/
 }
