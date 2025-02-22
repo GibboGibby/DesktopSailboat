@@ -255,7 +255,7 @@ int main()
 		
 	}
 
-	TerminateThread(renderThread.native_handle(), 1);
+	//TerminateThread(renderThread.native_handle(), 1);
 
 	SDL_DestroyWindow(window);
 	SDL_Quit();
