@@ -8,6 +8,35 @@ struct float2
 	float y;
 };
 
+struct Vector2i {
+	int x;
+	int y;
+
+	Vector2i operator+(const Vector2i& vec) const
+	{
+		Vector2i res;
+		res.x = vec.x + this->x;
+		res.y = vec.y + this->y;
+		return res;
+	}
+
+	Vector2i operator-(const Vector2i& vec) const
+	{
+		Vector2i res;
+		res.x = this->x - vec.x;
+		res.y = this->y - vec.y;
+		return res;
+	}
+
+	Vector2i operator*(const Vector2i& vec) const
+	{
+		Vector2i res;
+		res.x = vec.x + this->x;
+		res.y = vec.y + this->y;
+		return res;
+	}
+};
+
 
 struct Vector2
 {
@@ -25,8 +54,8 @@ struct Vector2
 	Vector2 operator-(const Vector2& vec) const
 	{
 		Vector2 res;
-		res.x = vec.x - this->x;
-		res.y = vec.y - this->y;
+		res.x = this->x - vec.x;
+		res.y = this->y - vec.y;
 		return res;
 	}
 
