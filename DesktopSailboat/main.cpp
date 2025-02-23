@@ -60,6 +60,13 @@ int main()
 	//SDL_Window* window = SDL_CreateWindow("EpicTest", 200, 200, SDL_WINDOW_TRANSPARENT | SDL_WINDOW_BORDERLESS | SDL_WINDOW_ALWAYS_ON_TOP);
 	SDL_CreateWindowAndRenderer("EpicTest", 500, 500, SDL_WINDOW_TRANSPARENT | SDL_WINDOW_ALWAYS_ON_TOP | SDL_WINDOW_BORDERLESS, &window, &renderer);
 
+	SDL_Log("Available renderer drivers:");
+	for (int i = 0; i < SDL_GetNumRenderDrivers(); i++) {
+		SDL_Log("%d. %s", i + 1, SDL_GetRenderDriver(i));
+	}
+
+
+
 	if (!window)
 	{
 		SDL_LogCritical(SDL_LOG_CATEGORY_ERROR, SDL_GetError());
