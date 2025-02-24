@@ -42,3 +42,19 @@ SDL_Window* Window::GetSDLWindow()
 {
     return window;
 }
+
+void Window::EnableClickThrough()
+{
+    HWND hwnd = GetWindowHandle();
+    LONG_PTR exStyle = GetWindowLongPtrW(hwnd, GWL_EXSTYLE);
+    SetWindowLongPtrW(hwnd, GWL_EXSTYLE, exStyle | WS_EX_LAYERED | WS_EX_TRANSPARENT);
+    SetLayeredWindowAttributes(hwnd, RGB(0, 0, 0), 255, LWA_COLORKEY);
+}
+
+void Window::DisableClickThrough()
+{
+    HWND hwnd = GetWindowHandle();
+    LONG_PTR exStyle = GetWindowLongPtrW(hwnd, GWL_EXSTYLE);
+    SetWindowLongPtrW(hwnd, GWL_EXSTYLE, exStyle & ~WS_EX_TRANSPARENT);
+}
+

@@ -23,6 +23,11 @@ bool Application::Init()
 void Application::Run()
 {
 	// Game Loop
+	while (isRunning)
+	{
+		eventHandler->HandleEvents(isRunning);
+
+	}
 }
 
 void Application::Shutdown()

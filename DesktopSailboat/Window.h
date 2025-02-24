@@ -17,6 +17,9 @@ public:
 	void SetWindowPosition(Vector2i pos);
 	Vector2i GetWindowPosition();
 	SDL_Window* GetSDLWindow();
+
+	void EnableClickThrough();
+	void DisableClickThrough();
 private:
 	HWND windowHandle = NULL;
 	Vector2i windowPos;

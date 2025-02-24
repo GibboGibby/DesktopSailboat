@@ -234,11 +234,11 @@ int main()
 
 		//RENDER
 
-		ImGui::Render();
 
 		SDL_SetRenderDrawColor(renderer, 0x00, 0x00, 0x00, 0x00);
 		SDL_RenderClear(renderer);
 
+		ImGui::Render();
 		ImGui_ImplSDLRenderer3_RenderDrawData(ImGui::GetDrawData(), renderer);
 		SDL_SetRenderDrawColor(renderer, 0x00, 0x00, 0xFF, 0xFF);
 
