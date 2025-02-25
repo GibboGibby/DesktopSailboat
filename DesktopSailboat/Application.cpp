@@ -13,6 +13,8 @@ bool Application::Init()
 	window = std::make_shared<Window>();
 	renderer = std::make_shared<Renderer>(window);
 	eventHandler = std::make_shared<EventHandler>();
+	clickInput = std::make_shared<ClickInput>();
+
 
 	if (window != nullptr && renderer != nullptr && eventHandler != nullptr)
 		return true;
@@ -26,7 +28,12 @@ void Application::Run()
 	while (isRunning)
 	{
 		eventHandler->HandleEvents(isRunning);
+		float mx, my;
+		SDL_MouseButtonFlags flags = SDL_GetGlobalMouseState(&mx, &my);
+		clickInput->UpdateCurrentInput(flags);
 
+
+		clickInput->UpdatePrevInput();
 	}
 }
 

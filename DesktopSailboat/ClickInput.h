@@ -17,8 +17,8 @@ private:
 public:
 	ClickInput();
 
-	void UpdatePrevInput(const SDL_MouseButtonFlags& flags);
 	void UpdateCurrentInput(const SDL_MouseButtonFlags& flags);
+	void UpdatePrevInput();
 
 	bool IsMouseButtonDown(GibMouseButtons button);
 	bool IsMouseButton(GibMouseButtons button);

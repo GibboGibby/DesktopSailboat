@@ -15,7 +15,7 @@ void ClickInput::UpdateCurrentInput(const SDL_MouseButtonFlags& flags)
 	current[MiddleMouseButton] = flags & SDL_BUTTON_MMASK;
 }
 
-void ClickInput::UpdatePrevInput(const SDL_MouseButtonFlags& flags)
+void ClickInput::UpdatePrevInput()
 {
 	memcpy(current, prev, 3 * sizeof(bool));
 }

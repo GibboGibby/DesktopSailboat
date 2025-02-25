@@ -2,6 +2,7 @@
 #include "Window.h"
 #include "Renderer.h"
 #include "EventHandler.h"
+#include "ClickInput.h"
 #include <memory>
 
 class Application
@@ -23,5 +24,6 @@ private:
 	std::shared_ptr<Window> window;
 	std::shared_ptr<Renderer> renderer;
 	std::shared_ptr<EventHandler> eventHandler;
+	std::shared_ptr<ClickInput> clickInput;
 
 };
