@@ -3,6 +3,7 @@
 #include <string>
 #include <thread>
 #include <Windows.h>
+#include "Application.h"
 
 #include "Maths.h"
 
@@ -47,6 +48,15 @@ void PassClickThrough(int x, int y) {
 }
 
 int main()
+{
+	Application app;
+	app.Init();
+	app.Run();
+	app.Shutdown();
+	return 0;
+}
+
+int fake_main()
 {
 
 	if (!SDL_Init(SDL_INIT_VIDEO))

@@ -1,6 +1,6 @@
 #include "GuiRenderer.h"
 
-void GuiRenderer::Init(const std::shared_ptr<Window> window, const std::shared_ptr<Renderer> renderer)
+GuiRenderer::GuiRenderer(const std::shared_ptr<Window> window, const std::shared_ptr<Renderer> renderer)
 {
 	IMGUI_CHECKVERSION();
 	ImGui::CreateContext();
@@ -12,6 +12,12 @@ void GuiRenderer::Init(const std::shared_ptr<Window> window, const std::shared_p
 	ImGui_ImplSDL3_InitForSDLRenderer(window->GetSDLWindow(), renderer->GetSDLRenderer());
 	ImGui_ImplSDLRenderer3_Init(renderer->GetSDLRenderer());
 }
+
+GuiRenderer::~GuiRenderer()
+{
+
+}
+
 
 void GuiRenderer::NewFrame()
 {

@@ -17,12 +17,12 @@ void ClickInput::UpdateCurrentInput(const SDL_MouseButtonFlags& flags)
 
 void ClickInput::UpdatePrevInput()
 {
-	memcpy(current, prev, 3 * sizeof(bool));
+	memcpy(prev, current, 3 * sizeof(bool));
 }
 
 bool ClickInput::IsMouseButtonDown(GibMouseButtons button)
 {
-	return (current[button] && !prev[button]);
+	return (current[button] == true && prev[button] == false);
 }
 
 bool ClickInput::IsMouseButton(GibMouseButtons button)

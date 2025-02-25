@@ -9,6 +9,8 @@ class Renderer
 public:
 	Renderer(std::shared_ptr<Window> window);
 
+	void StartRender();
+	void FinishRender();
 
 	SDL_Renderer* GetSDLRenderer();
 private:

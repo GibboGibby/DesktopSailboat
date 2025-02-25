@@ -9,8 +9,13 @@
 
 class GuiRenderer
 {
-	void Init(const std::shared_ptr<Window> window, const std::shared_ptr<Renderer> renderer);
+public:
+	GuiRenderer(const std::shared_ptr<Window> window, const std::shared_ptr<Renderer> renderer);
+	~GuiRenderer();
+
 
 	void NewFrame();
 	void Render(const std::shared_ptr<Renderer> renderer);
+
+public:
 };

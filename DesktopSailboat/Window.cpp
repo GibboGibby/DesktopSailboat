@@ -2,6 +2,13 @@
 
 Window::Window(int width, int height, std::string title)
 {
+    if (!SDL_Init(SDL_INIT_VIDEO))
+    {
+        std::cout << "SDL failed to init" << std::endl;
+        SDL_LogCritical(SDL_LOG_CATEGORY_VIDEO, SDL_GetError());
+        exit(1);
+    }
+
     windowPos = { width, height };
     windowName = title;
 
@@ -9,8 +16,11 @@ Window::Window(int width, int height, std::string title)
 
     if (window == nullptr) {
         std::cerr << "Window Could Not Be Created" << std::endl;
+        SDL_LogCritical(SDL_LOG_CATEGORY_ERROR, SDL_GetError());
         exit(1);
     }
+
+    SDL_ShowWindow(window);
 }
 
 Window::~Window()
@@ -58,3 +68,9 @@ void Window::DisableClickThrough()
     SetWindowLongPtrW(hwnd, GWL_EXSTYLE, exStyle & ~WS_EX_TRANSPARENT);
 }
 
+void Window::PassClickThrough(int x, int y)
+{
+    EnableClickThrough();  // Temporarily allow clicks to pass through
+    //mouse_event(MOUSEEVENTF_LEFTDOWN | MOUSEEVENTF_LEFTUP, x, y, 0, 0);
+    DisableClickThrough(); // Restore normal click handling
+}

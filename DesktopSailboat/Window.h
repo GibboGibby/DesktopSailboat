@@ -10,7 +10,7 @@ class Window
 
 public:
 	
-	Window(int width = 1920, int height = 1080, std::string title = "Desktop Sailboat");
+	Window(int width = 500, int height = 500, std::string title = "Desktop Sailboat");
 	~Window();
 
 	HWND GetWindowHandle();
@@ -20,6 +20,7 @@ public:
 
 	void EnableClickThrough();
 	void DisableClickThrough();
+	void PassClickThrough(int x, int y);
 private:
 	HWND windowHandle = NULL;
 	Vector2i windowPos;

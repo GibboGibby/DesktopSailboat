@@ -10,6 +10,17 @@ Renderer::Renderer(std::shared_ptr<Window> window)
 	}
 }
 
+void Renderer::StartRender()
+{
+	SDL_SetRenderDrawColor(renderer, 0x00, 0x00, 0x00, 0x00);
+	SDL_RenderClear(renderer);
+}
+
+void Renderer::FinishRender()
+{
+	SDL_RenderPresent(renderer);
+}
+
 SDL_Renderer* Renderer::GetSDLRenderer()
 {
 	return renderer;
