@@ -57,6 +57,14 @@ void Application::Run()
 			std::cout << "Left Mouse Button Up" << std::endl;
 		}
 
+		int sizeX, sizeY;
+		SDL_GetWindowSize(window->GetSDLWindow(), &sizeX, &sizeY);
+
+		if (IsPointInsideObject(mx, my, { wx, wy, sizeX, sizeY }))
+		{
+			SetActiveWindow(window->GetWindowHandle());
+		}
+
 
 		// RENDER
 		renderer->StartRender();
@@ -86,29 +94,34 @@ void Application::Run()
 			ImGui::End();
 		}
 
-		SDL_Rect temp_rect{ 1000,600,100,100 };
-		SetActiveWindow(window->GetWindowHandle());
-		if (IsPointInsideObject(mx, my, temp_rect))
+		if (clickInput->IsMouseButtonDown(LeftMouseButton))
 		{
-			//std::cout << "Clicking object" << std::endl;
-			//moving = true;
-			//xOffset = temp_rect.x - mx;
-			//yOffset = temp_rect.y - my;
-		}
-		else
-		{
-			int sizeX, sizeY;
-			SDL_GetWindowSize(window->GetSDLWindow(), &sizeX, &sizeY);
-			SDL_Rect screenRect{ wx, wy, sizeX, sizeY };
-			if (IsPointInsideObject(mx, my, screenRect))
-			{
-				SetActiveWindow(window->GetWindowHandle());
-				window->PassClickThrough(mx, my);
-			}
-			//std::cout << "Not Clicking Object" << std::endl;
-			//PassClickThrough(mx, my);
-		}
 
+
+			SDL_Rect temp_rect{ 1000,600,100,100 };
+			SetActiveWindow(window->GetWindowHandle());
+			if (IsPointInsideObject(mx, my, temp_rect))
+			{
+				//std::cout << "Clicking object" << std::endl;
+				//moving = true;
+				//xOffset = temp_rect.x - mx;
+				//yOffset = temp_rect.y - my;
+			}
+			else
+			{
+				int sizeX, sizeY;
+				SDL_GetWindowSize(window->GetSDLWindow(), &sizeX, &sizeY);
+				SDL_Rect screenRect{ wx, wy, sizeX, sizeY };
+				if (IsPointInsideObject(mx, my, screenRect))
+				{
+					SetActiveWindow(window->GetWindowHandle());
+					window->PassClickThrough(mx, my);
+				}
+				//std::cout << "Not Clicking Object" << std::endl;
+				//PassClickThrough(mx, my);
+			}
+
+		}
 		
 
 		

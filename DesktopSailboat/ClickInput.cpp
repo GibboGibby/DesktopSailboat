@@ -10,8 +10,8 @@ ClickInput::ClickInput()
 
 void ClickInput::UpdateCurrentInput(const SDL_MouseButtonFlags& flags)
 {
-	current[LeftMouseButton] = flags & SDL_BUTTON_LMASK;
-	current[RightMouseButton] = flags & SDL_BUTTON_RMASK;
+	current[LeftMouseButton] = (flags & SDL_BUTTON_LMASK);
+	current[RightMouseButton] = (flags & SDL_BUTTON_RMASK);
 	current[MiddleMouseButton] = flags & SDL_BUTTON_MMASK;
 }
 
