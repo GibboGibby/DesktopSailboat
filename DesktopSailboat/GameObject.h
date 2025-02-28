@@ -3,7 +3,9 @@
 
 class GameObject
 {
+public:
+	Vector2 Position();
+	void Position(const Vector2& vec);
 private:
 	Vector2 position;
-	Vector2 velocity;
 };

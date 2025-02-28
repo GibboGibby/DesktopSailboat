@@ -140,8 +140,10 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Application.cpp" />
+    <ClCompile Include="Camera.cpp" />
     <ClCompile Include="ClickInput.cpp" />
     <ClCompile Include="EventHandler.cpp" />
+    <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="GuiRenderer.cpp" />
     <ClCompile Include="ImGUI\imgui.cpp" />
     <ClCompile Include="ImGUI\imgui_demo.cpp" />
@@ -164,6 +166,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h" />
+    <ClInclude Include="Camera.h" />
     <ClInclude Include="ClickInput.h" />
     <ClInclude Include="EventHandler.h" />
     <ClInclude Include="GameObject.h" />

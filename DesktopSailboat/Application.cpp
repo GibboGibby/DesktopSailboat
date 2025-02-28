@@ -23,6 +23,11 @@ bool Application::Init()
 	eventHandler = std::make_shared<EventHandler>(window);
 	clickInput = std::make_shared<ClickInput>();
 
+	camera = std::make_shared<Camera>();
+	particleSystem = std::make_shared<ParticleSystem>();
+
+	renderer->SetCamera(camera);
+
 
 	if (window != nullptr && renderer != nullptr && eventHandler != nullptr)
 		return true;
@@ -44,17 +49,17 @@ void Application::Run()
 
 		if (clickInput->IsMouseButtonDown(LeftMouseButton))
 		{
-			std::cout << "Left Mouse Button Down" << std::endl;
+			//std::cout << "Left Mouse Button Down" << std::endl;
 		}
 
 		if (clickInput->IsMouseButton(LeftMouseButton))
 		{
-			std::cout << "Left Mouse Button" << std::endl;
+			//std::cout << "Left Mouse Button" << std::endl;
 		}
 
 		if (clickInput->IsMouseButtonUp(LeftMouseButton))
 		{
-			std::cout << "Left Mouse Button Up" << std::endl;
+			//std::cout << "Left Mouse Button Up" << std::endl;
 		}
 
 		int sizeX, sizeY;
@@ -64,6 +69,8 @@ void Application::Run()
 		{
 			SetActiveWindow(window->GetWindowHandle());
 		}
+
+		camera->Update();
 
 
 		// RENDER
@@ -123,7 +130,7 @@ void Application::Run()
 
 		}
 		
-
+		renderer->DrawCircle(SDL_Point{ (int)mx,(int)my }, 100, SDL_Color{0, 0, 255, 255});
 		
 
 		guiRenderer->Render(renderer);
