@@ -7,6 +7,10 @@ GuiRenderer::GuiRenderer(const std::shared_ptr<Window> window, const std::shared
 	ImGuiIO& io = ImGui::GetIO(); (void)io;
 	io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
 
+	int wx, wy;
+	SDL_GetWindowPosition(window->GetSDLWindow(), &wx, &wy);
+	ImGui::SetNextWindowPos(ImVec2(wx, wy), ImGuiCond_Appearing, ImVec2(0.5f, 0.5f));
+
 	ImGui::StyleColorsDark();
 
 	ImGui_ImplSDL3_InitForSDLRenderer(window->GetSDLWindow(), renderer->GetSDLRenderer());

@@ -37,6 +37,7 @@ bool Application::Init()
 
 void Application::Run()
 {
+	bool f1Check = false;
 	// Game Loop
 	while (isRunning)
 	{
@@ -69,10 +70,24 @@ void Application::Run()
 		{
 			SetActiveWindow(window->GetWindowHandle());
 		}
+		
+		const bool* state = SDL_GetKeyboardState(nullptr);
+
+		if (state[SDL_SCANCODE_F1] && !f1Check)
+		{
+			showSettings = !showSettings;
+			f1Check = true;
+		}
+
+		if (!state[SDL_SCANCODE_F1])
+		{
+			f1Check = false;
+		}
 
 		camera->Update();
 
-
+		//ImGui::SetNextWindowPos(ImVec2(wx, wy), ImGuiCond_Appearing, ImVec2(0.5f, 0.5f));
+		
 		// RENDER
 		renderer->StartRender();
 
@@ -82,10 +97,12 @@ void Application::Run()
 		int counter = 0;
 		float randomValue = 0.0f;
 
+		if (showSettings)
 		{
 
 			ImGuiIO& io = ImGui::GetIO();
-			ImGui::Begin("Hello World!");
+			ImGui::Begin("Desktop Sailboat Settings", 0, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize);
+			ImGui::SetWindowPos(ImVec2(0, 0), 0);
 			ImGui::Checkbox("RandomTestCheckbox", &randomCheckbox);
 
 			ImGui::SliderFloat("Float Slider", &randomValue, 0.0f, 10.0f);

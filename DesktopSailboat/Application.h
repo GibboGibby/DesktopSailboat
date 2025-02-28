@@ -33,4 +33,6 @@ private:
 	std::shared_ptr<Camera> camera;
 	std::shared_ptr<ParticleSystem> particleSystem;
 
+	bool showSettings = false;
+
 };
