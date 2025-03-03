@@ -29,6 +29,7 @@ bool Application::Init()
 
 	renderer->SetCamera(camera);
 
+	LoadSettings();
 
 	if (window != nullptr && renderer != nullptr && eventHandler != nullptr)
 		return true;
@@ -122,6 +123,7 @@ void Application::Run()
 				// Done every frame this is changed. Could do a system to callback once it returns false after returning true
 				// This would indicate that the value has been changed but has also stopped being changed (for the particle count)
 				// As changing every frame might be a bad idea
+				SaveSettings();
 			}
 			ImGui::SliderFloat("Viscosity", &g_Settings.viscosity, 0.0f, 10.0f);
 
