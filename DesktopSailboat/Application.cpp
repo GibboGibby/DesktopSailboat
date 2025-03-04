@@ -1,4 +1,5 @@
 #include "Application.h"
+#include "Settings.h"
 
 bool Application::IsPointInsideObject(int x, int y, SDL_Rect object)
 {
@@ -28,6 +29,7 @@ bool Application::Init()
 
 	renderer->SetCamera(camera);
 
+	LoadSettings();
 
 	if (window != nullptr && renderer != nullptr && eventHandler != nullptr)
 		return true;
@@ -115,6 +117,16 @@ void Application::Run()
 			ImGui::Text("Counter = %d", counter);
 
 			ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / io.Framerate, io.Framerate);
+
+			if (ImGui::SliderInt("Particle Count", &g_Settings.particleCount, 1, 100000))
+			{
+				// Done every frame this is changed. Could do a system to callback once it returns false after returning true
+				// This would indicate that the value has been changed but has also stopped being changed (for the particle count)
+				// As changing every frame might be a bad idea
+				SaveSettings();
+			}
+			ImGui::SliderFloat("Viscosity", &g_Settings.viscosity, 0.0f, 10.0f);
+
 			ImGui::End();
 		}
 

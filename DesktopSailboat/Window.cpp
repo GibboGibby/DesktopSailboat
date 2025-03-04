@@ -12,8 +12,8 @@ Window::Window(int width, int height, std::string title)
     windowPos = { width, height };
     windowName = title;
 
-    window = SDL_CreateWindow(title.c_str(), width, height, SDL_WINDOW_TRANSPARENT | SDL_WINDOW_ALWAYS_ON_TOP);
-    //window = SDL_CreateWindow(title.c_str(), width, height, SDL_WINDOW_TRANSPARENT | SDL_WINDOW_ALWAYS_ON_TOP | SDL_WINDOW_BORDERLESS);
+    //window = SDL_CreateWindow(title.c_str(), width, height, SDL_WINDOW_TRANSPARENT | SDL_WINDOW_ALWAYS_ON_TOP);
+    window = SDL_CreateWindow(title.c_str(), width, height, SDL_WINDOW_TRANSPARENT | SDL_WINDOW_ALWAYS_ON_TOP | SDL_WINDOW_BORDERLESS);
 
     if (window == nullptr) {
         std::cerr << "Window Could Not Be Created" << std::endl;
