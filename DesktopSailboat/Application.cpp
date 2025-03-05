@@ -48,6 +48,11 @@ void Application::Run()
 	testPos1 = window->GetWindowSize().x / 2.0f;
 	float testPos2 = 0.0f;
 
+	float xOffset = 0.0f;
+	float yOffset = 0.0f;
+
+	bool movingWindow = false;
+
 	bool f1Check = false;
 	int tabNumber = 0;
 	// Game Loop
@@ -111,10 +116,12 @@ void Application::Run()
 		int counter = 0;
 		float randomValue = 0.0f;
 
-		float xOffset = 0.0f;
-		float yOffset = 0.0f;
-
-		bool movingWindow = false;
+		if (movingWindow)
+		{
+			Vector2 winSize = window->GetWindowSize();
+			SDL_Rect rect = { mx + xOffset, my + yOffset, winSize.x, winSize.y };
+			SDL_SetWindowPosition(window->GetSDLWindow(), rect.x, rect.y);
+		}
 
 		if (showSettings)
 		{
@@ -143,7 +150,8 @@ void Application::Run()
 
 					ImGui::SliderFloat("Float Slider", &randomValue, 0.0f, 10.0f);
 
-					if (ImGui::Button("Move Window"))
+					ImGui::Button("Move Window");
+					if (ImGui::IsItemActive())
 					{
 						if (!movingWindow)
 						{
@@ -153,8 +161,9 @@ void Application::Run()
 							float mx, my;
 							SDL_GetGlobalMouseState(&mx, &my);
 
-							xOffset = mx - wx;
-							yOffset = my - wy;
+							xOffset = wx - mx;
+							yOffset = wy - my;
+
 						}
 					}
 					else
