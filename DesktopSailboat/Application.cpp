@@ -111,6 +111,11 @@ void Application::Run()
 		int counter = 0;
 		float randomValue = 0.0f;
 
+		float xOffset = 0.0f;
+		float yOffset = 0.0f;
+
+		bool movingWindow = false;
+
 		if (showSettings)
 		{
 			
@@ -137,6 +142,28 @@ void Application::Run()
 					ImGui::Checkbox("RandomTestCheckbox", &randomCheckbox);
 
 					ImGui::SliderFloat("Float Slider", &randomValue, 0.0f, 10.0f);
+
+					if (ImGui::Button("Move Window"))
+					{
+						if (!movingWindow)
+						{
+							movingWindow = true;
+							int wx, wy;
+							SDL_GetWindowPosition(window->GetSDLWindow(), &wx, &wy);
+							float mx, my;
+							SDL_GetGlobalMouseState(&mx, &my);
+
+							xOffset = mx - wx;
+							yOffset = my - wy;
+						}
+					}
+					else
+					{
+						if (movingWindow)
+						{
+							movingWindow = false;
+						}
+					}
 
 					if (ImGui::Button("Button"))
 					{
