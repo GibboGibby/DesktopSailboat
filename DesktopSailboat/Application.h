@@ -7,6 +7,10 @@
 #include "Camera.h"
 #include "ParticleSystem.h"
 #include <memory>
+#include "GTimer.h"
+
+const int SCREEN_FPS = 60.0f;
+const int SCREEN_TICKS_PER_FRAME = 1000.0f / SCREEN_FPS;
 
 class Application
 {

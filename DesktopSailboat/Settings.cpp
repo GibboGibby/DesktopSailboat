@@ -1,3 +1,3 @@
 #include "Settings.h"
 
-Settings g_Settings = {};
+DesktopSailboat::Settings g_Settings = {};

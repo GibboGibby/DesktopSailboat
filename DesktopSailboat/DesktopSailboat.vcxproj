@@ -144,6 +144,7 @@
     <ClCompile Include="ClickInput.cpp" />
     <ClCompile Include="EventHandler.cpp" />
     <ClCompile Include="GameObject.cpp" />
+    <ClCompile Include="GTimer.cpp" />
     <ClCompile Include="GuiRenderer.cpp" />
     <ClCompile Include="ImGUI\imgui.cpp" />
     <ClCompile Include="ImGUI\imgui_demo.cpp" />
@@ -154,9 +155,10 @@
     <ClCompile Include="ImGUI\imgui_tables.cpp" />
     <ClCompile Include="ImGUI\imgui_widgets.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="Particle.cpp" />
+    <ClCompile Include="Particle.h" />
     <ClCompile Include="ParticleSystem.h" />
     <ClCompile Include="Renderer.cpp" />
+    <ClCompile Include="Settings.cpp" />
     <ClCompile Include="Window.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -170,6 +172,7 @@
     <ClInclude Include="ClickInput.h" />
     <ClInclude Include="EventHandler.h" />
     <ClInclude Include="GameObject.h" />
+    <ClInclude Include="GTimer.h" />
     <ClInclude Include="GuiRenderer.h" />
     <ClInclude Include="ImGUI\imconfig.h" />
     <ClInclude Include="ImGUI\imgui.h" />
@@ -183,6 +186,7 @@
     <ClInclude Include="ImGUI\imstb_truetype.h" />
     <ClInclude Include="Maths.h" />
     <ClInclude Include="Renderer.h" />
+    <ClInclude Include="Settings.h" />
     <ClInclude Include="Window.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

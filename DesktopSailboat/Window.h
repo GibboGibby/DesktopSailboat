@@ -18,10 +18,15 @@ public:
 	Vector2i GetWindowPosition();
 	SDL_Window* GetSDLWindow();
 
+	Vector2 GetWindowSize();
+
 	void EnableClickThrough();
 	void DisableClickThrough();
 	void PassClickThrough(int x, int y);
 private:
+	float width;
+	float height;
+
 	HWND windowHandle = NULL;
 	Vector2i windowPos;
 	std::string windowName;

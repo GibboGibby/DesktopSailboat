@@ -29,7 +29,7 @@ bool Application::Init()
 
 	renderer->SetCamera(camera);
 
-	LoadSettings();
+	DesktopSailboat::LoadSettings();
 
 	if (window != nullptr && renderer != nullptr && eventHandler != nullptr)
 		return true;
@@ -39,10 +39,22 @@ bool Application::Init()
 
 void Application::Run()
 {
+	GTimer fpsTimer;
+	GTimer capTimer;
+	fpsTimer.Start();
+
+	float deltaTime = 0.0f;
+	float testPos1 = 0.0f;
+	testPos1 = window->GetWindowSize().x / 2.0f;
+	float testPos2 = 0.0f;
+
 	bool f1Check = false;
+	int tabNumber = 0;
 	// Game Loop
 	while (isRunning)
 	{
+
+		capTimer.Start();
 		eventHandler->HandleEvents(isRunning);
 		float mx, my;
 		SDL_MouseButtonFlags flags = SDL_GetGlobalMouseState(&mx, &my);
@@ -101,31 +113,63 @@ void Application::Run()
 
 		if (showSettings)
 		{
+			
 
 			ImGuiIO& io = ImGui::GetIO();
-			ImGui::Begin("Desktop Sailboat Settings", 0, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize);
+			//ImGui::Begin("Desktop Sailboat Settings", 0, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize);
+			ImGui::Begin("Desktop Sailboat Settings", 0, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoResize);
 			ImGui::SetWindowPos(ImVec2(0, 0), 0);
-			ImGui::Checkbox("RandomTestCheckbox", &randomCheckbox);
 
-			ImGui::SliderFloat("Float Slider", &randomValue, 0.0f, 10.0f);
-
-			if (ImGui::Button("Button"))
+			if (ImGui::Button("Test Stuff"))
 			{
-				counter++;
+				tabNumber = 0;
 			}
 			ImGui::SameLine();
-			ImGui::Text("Counter = %d", counter);
-
-			ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / io.Framerate, io.Framerate);
-
-			if (ImGui::SliderInt("Particle Count", &g_Settings.particleCount, 1, 100000))
+			if (ImGui::Button("Sim Settings"))
 			{
-				// Done every frame this is changed. Could do a system to callback once it returns false after returning true
-				// This would indicate that the value has been changed but has also stopped being changed (for the particle count)
-				// As changing every frame might be a bad idea
-				SaveSettings();
+				tabNumber = 1;
 			}
-			ImGui::SliderFloat("Viscosity", &g_Settings.viscosity, 0.0f, 10.0f);
+			ImGui::NewLine();
+
+			switch (tabNumber)
+			{
+				case 0:
+					ImGui::Checkbox("RandomTestCheckbox", &randomCheckbox);
+
+					ImGui::SliderFloat("Float Slider", &randomValue, 0.0f, 10.0f);
+
+					if (ImGui::Button("Button"))
+					{
+						counter++;
+					}
+					ImGui::SameLine();
+					ImGui::Text("Counter = %d", counter);
+
+					ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / io.Framerate, io.Framerate);
+					break;
+				case 1:
+					if (ImGui::SliderInt("Particle Count", &g_Settings.particleCount, 1, 100000))
+					{
+						// Done every frame this is changed. Could do a system to callback once it returns false after returning true
+						// This would indicate that the value has been changed but has also stopped being changed (for the particle count)
+						// As changing every frame might be a bad idea
+						DesktopSailboat::SaveSettings();
+					}
+					ImGui::SliderFloat("Viscosity", &g_Settings.viscosity, 0.0f, 10.0f);
+					ImGui::Checkbox("Limit FPS to 60", &g_Settings.limitFPS);
+					if (ImGui::Button("Reset to Default"))
+					{
+						DesktopSailboat::ResetSettings();
+						DesktopSailboat::SaveSettings();
+					}
+
+
+			}
+			
+
+			
+
+
 
 			ImGui::End();
 		}
@@ -159,7 +203,17 @@ void Application::Run()
 
 		}
 		
-		renderer->DrawCircle(SDL_Point{ (int)mx,(int)my }, 100, SDL_Color{0, 0, 255, 255});
+		float localX, localY;
+		SDL_GetMouseState(&localX, &localY);
+
+		testPos2 += 100.0f * deltaTime;
+
+		if (testPos2 > window->GetWindowSize().y)
+		{
+			testPos2 = 0.0f;
+		}
+
+		renderer->DrawCircle(SDL_Point{ (int)testPos1,(int)testPos2 }, 50, SDL_Color{0, 0, 255, 255});
 		
 
 		guiRenderer->Render(renderer);
@@ -167,6 +221,14 @@ void Application::Run()
 		renderer->FinishRender();
 		
 		clickInput->UpdatePrevInput();
+
+		int frameTicks = capTimer.GetTicks();
+		if (frameTicks < SCREEN_TICKS_PER_FRAME && g_Settings.limitFPS)
+		{
+			//Wait remaining time
+			SDL_Delay(SCREEN_TICKS_PER_FRAME - frameTicks);
+		}
+		deltaTime = (float)capTimer.GetTicks() / 1000.0f;
 	}
 }
 
