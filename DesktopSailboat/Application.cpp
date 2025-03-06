@@ -39,6 +39,8 @@ bool Application::Init()
 
 void Application::Run()
 {
+	std::unique_ptr<ParticleSystem> particleSystem = std::make_unique<ParticleSystem>(renderer, window);
+	//ParticleSystem* particleSystem = new ParticleSystem(renderer, window);
 	GTimer fpsTimer;
 	GTimer capTimer;
 	fpsTimer.Start();
@@ -58,7 +60,6 @@ void Application::Run()
 	// Game Loop
 	while (isRunning)
 	{
-
 		capTimer.Start();
 		eventHandler->HandleEvents(isRunning);
 		float mx, my;
@@ -108,10 +109,12 @@ void Application::Run()
 
 		if (state[SDL_SCANCODE_LCTRL])
 		{
-			std::cout << "Control is pressed!!!!!!!" << std::endl;
+			//std::cout << "Control is pressed!!!!!!!" << std::endl;
 		}
 
 		camera->Update();
+
+		particleSystem->Update();
 
 		//ImGui::SetNextWindowPos(ImVec2(wx, wy), ImGuiCond_Appearing, ImVec2(0.5f, 0.5f));
 		
@@ -119,6 +122,8 @@ void Application::Run()
 		renderer->StartRender();
 
 		guiRenderer->NewFrame();
+
+		particleSystem->Render();
 
 		bool randomCheckbox = false;
 		int counter = 0;
@@ -200,12 +205,34 @@ void Application::Run()
 						DesktopSailboat::SaveSettings();
 					}
 					ImGui::SliderFloat("Viscosity", &g_Settings.viscosity, 0.0f, 10.0f);
-					ImGui::Checkbox("Limit FPS to 60", &g_Settings.limitFPS);
-					ImGui::Checkbox("Limit Simulation FPS to 60", &g_Settings.limitSimFPS);
+					ImGui::Checkbox("Limit FPS: ", &g_Settings.limitFPS);
+					ImGui::SameLine();
+					if (ImGui::InputInt("##FpsLimit", &g_Settings.fpsLimit))
+					{
+						if (g_Settings.fpsLimit < 15) g_Settings.fpsLimit = 15;
+					}
+					
+
+
+					ImGui::Checkbox("Limit Simulation FPS: ", &g_Settings.limitSimFPS);
+					ImGui::SameLine();
+					ImGui::InputInt("##simFpsLimit", &g_Settings.simFpsLimit);
 					if (ImGui::Button("Reset to Default"))
 					{
 						DesktopSailboat::ResetSettings();
 						DesktopSailboat::SaveSettings();
+					}
+
+					if (ImGui::IsAnyItemActive)
+					{
+						DesktopSailboat::SaveSettings();
+					}
+
+					if (ImGui::Button("Spawn Cricle at Center"))
+					{
+						int sizeX, sizeY;
+						SDL_GetWindowSize(window->GetSDLWindow(), &sizeX, &sizeY);
+						particleSystem->SpawnCircle(sizeX / 2, sizeY / 2, 20);
 					}
 
 
@@ -259,7 +286,7 @@ void Application::Run()
 			testPos2 = 0.0f;
 		}
 
-		renderer->DrawCircle(SDL_Point{ (int)testPos1,(int)testPos2 }, 50, SDL_Color{0, 0, 255, 255});
+		//renderer->DrawCircle(SDL_Point{ (int)testPos1,(int)testPos2 }, 50, SDL_Color{0, 0, 255, 255});
 		
 
 		guiRenderer->Render(renderer);
@@ -269,10 +296,11 @@ void Application::Run()
 		clickInput->UpdatePrevInput();
 
 		int frameTicks = capTimer.GetTicks();
-		if (frameTicks < SCREEN_TICKS_PER_FRAME && g_Settings.limitFPS)
+		float screenTicksPerFrame = 1000.0f / g_Settings.fpsLimit;
+		if (frameTicks < screenTicksPerFrame && g_Settings.limitFPS)
 		{
 			//Wait remaining time
-			SDL_Delay(SCREEN_TICKS_PER_FRAME - frameTicks);
+			SDL_Delay(screenTicksPerFrame - frameTicks);
 		}
 		deltaTime = (float)capTimer.GetTicks() / 1000.0f;
 	}

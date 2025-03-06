@@ -11,6 +11,9 @@ namespace DesktopSailboat
 
 		bool limitFPS = false;
 		bool limitSimFPS = true;
+
+		int fpsLimit = 60;
+		int simFpsLimit = 60;
 	};
 }
 

@@ -156,6 +156,7 @@
     <ClCompile Include="ImGUI\imgui_widgets.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Particle.h" />
+    <ClCompile Include="ParticleSystem.cpp" />
     <ClCompile Include="ParticleSystem.h" />
     <ClCompile Include="Renderer.cpp" />
     <ClCompile Include="Settings.cpp" />

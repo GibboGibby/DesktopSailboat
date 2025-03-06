@@ -69,6 +69,15 @@ struct Vector2
 		return res;
 	}
 
+	Vector2 operator* (const float& val) const
+	{
+		Vector2 res;
+		res.x = this->x * val;
+		res.y = this->y * val;
+		return res;
+	}
+
+
 	
 	float Magnitude()
 	{
@@ -83,6 +92,12 @@ struct Vector2
 	Vector2 Cross(const Vector2& other)
 	{
 		return { 0.0f,0.0f };
+	}
+
+	Vector2 Normalized()
+	{
+		float mag = Magnitude();
+		return { x / mag, y / mag };
 	}
 
 };
