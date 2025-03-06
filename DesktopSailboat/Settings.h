@@ -10,6 +10,7 @@ namespace DesktopSailboat
 		float viscosity = 5.0f;
 
 		bool limitFPS = false;
+		bool limitSimFPS = true;
 	};
 }
 

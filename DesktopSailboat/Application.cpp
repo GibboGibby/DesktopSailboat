@@ -84,13 +84,16 @@ void Application::Run()
 
 		int sizeX, sizeY;
 		SDL_GetWindowSize(window->GetSDLWindow(), &sizeX, &sizeY);
-
+		 
 		if (IsPointInsideObject(mx, my, { wx, wy, sizeX, sizeY }))
 		{
-			SetActiveWindow(window->GetWindowHandle());
+			//std::cout << "Setting active window" << std::endl;
+			//SetActiveWindow(window->GetWindowHandle());
+			SetForegroundWindow(window->GetWindowHandle());
 		}
 		
 		const bool* state = SDL_GetKeyboardState(nullptr);
+		
 
 		if (state[SDL_SCANCODE_F1] && !f1Check)
 		{
@@ -101,6 +104,11 @@ void Application::Run()
 		if (!state[SDL_SCANCODE_F1])
 		{
 			f1Check = false;
+		}
+
+		if (state[SDL_SCANCODE_LCTRL])
+		{
+			std::cout << "Control is pressed!!!!!!!" << std::endl;
 		}
 
 		camera->Update();
@@ -193,6 +201,7 @@ void Application::Run()
 					}
 					ImGui::SliderFloat("Viscosity", &g_Settings.viscosity, 0.0f, 10.0f);
 					ImGui::Checkbox("Limit FPS to 60", &g_Settings.limitFPS);
+					ImGui::Checkbox("Limit Simulation FPS to 60", &g_Settings.limitSimFPS);
 					if (ImGui::Button("Reset to Default"))
 					{
 						DesktopSailboat::ResetSettings();
@@ -231,6 +240,7 @@ void Application::Run()
 				if (IsPointInsideObject(mx, my, screenRect))
 				{
 					SetActiveWindow(window->GetWindowHandle());
+					SetForegroundWindow(window->GetWindowHandle());
 					window->PassClickThrough(mx, my);
 				}
 				//std::cout << "Not Clicking Object" << std::endl;
