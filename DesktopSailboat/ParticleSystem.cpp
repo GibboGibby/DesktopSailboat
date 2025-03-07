@@ -22,20 +22,41 @@ void ParticleSystem::Update()
 		Vector2 mousePos = { mouseX, mouseY };
 		if ((Squared(mouseX - circlePos.x) + Squared(mouseY - circlePos.y)) < Squared(circles[i].radius))
 		{
+			Vector2 minus = circlePos - mousePos;
+			Vector2 normalized = minus.Normalized();
+			Vector2 newPos = mousePos + (normalized * (circles[i].radius * 1.0f));
+
+			circles[i].pos = newPos;
 		}
 
-
+		/*
 		float dx = abs(mouseX - circlePos.x);
 		float dy = abs(mouseY - circlePos.y);
 		float r = circles[i].radius;
 		if (dx > r || dy > r) continue;
+		v*/
 		
 
-		Vector2 minus = circlePos - mousePos;
-		Vector2 normalized = minus.Normalized();
-		Vector2 newPos = mousePos + (normalized * circles[i].radius);
+		Circle a = circles[i];
+		for (int j = 0; j < circles.size(); j++)
+		{
+			if (j == i) continue;
+#
+			Circle b = circles[j];
+			float lowerBound = Squared(a.radius - b.radius);
+			float upperBound = Squared(a.radius + b.radius);
+			float val = Squared(a.pos.x - b.pos.x) + Squared(a.pos.y - b.pos.y);
 
-		circles[i].pos = newPos;
+			if (lowerBound <= val && val <= upperBound)
+			{
+				//std::cout << "Two Circles Colliding" << std::endl;
+				Vector2 minus = b.pos - a.pos;
+				Vector2 normalized = minus.Normalized();
+				Vector2 newPos = a.pos + (normalized * (a.radius + b.radius));
+
+				circles[j].pos = newPos;
+			}
+		}
 	}
 }
 
