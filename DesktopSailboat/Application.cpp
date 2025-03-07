@@ -309,5 +309,6 @@ void Application::Run()
 void Application::Shutdown()
 {
 	// Appropriate cleanup. Should mostly be done on the side of the particle system as I am using shared pointers
+	// Nevermind the particle system is also using a shared_ptr
 
 }
