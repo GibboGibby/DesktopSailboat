@@ -48,7 +48,9 @@ void Window::SetWindowPosition(Vector2i pos)
 
 Vector2i Window::GetWindowPosition()
 {
-    return windowPos;
+    int x, y;
+    SDL_GetWindowPosition(GetSDLWindow(), &x, &y);
+    return Vector2i{ x,y };
 }
 
 SDL_Window* Window::GetSDLWindow()

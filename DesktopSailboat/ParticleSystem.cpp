@@ -1,9 +1,15 @@
 #include "ParticleSystem.h"
 #include "Renderer.h"
 #include "Window.h"
+#include "Settings.h"
 
 inline float Squared(float val) {
 	return val * val;
+}
+
+void ParticleSystem::Start()
+{
+	ResetBox();
 }
 
 void ParticleSystem::Update()
@@ -35,7 +41,7 @@ void ParticleSystem::Update()
 		float r = circles[i].radius;
 		if (dx > r || dy > r) continue;
 		v*/
-		
+		 
 
 		Circle a = circles[i];
 		for (int j = 0; j < circles.size(); j++)
@@ -63,11 +69,27 @@ void ParticleSystem::Update()
 void ParticleSystem::Render()
 {
 
+	
+
 	for (int i = 0; i < circles.size(); i++)
 	{
 		Circle circle = circles[i];
 		renderer->DrawCircle(SDL_Point{ (int)circle.pos.x, (int)circle.pos.y }, circle.radius, SDL_Color{ 0, 0, 255, 255 });
 	}
+
+	renderer->DrawLine(pb.topLeft, pb.topRight, SDL_Color{ 0, 0, 255, 255 });
+	renderer->DrawLine(pb.topLeft, pb.bottomLeft, SDL_Color{ 0, 0, 255, 255 });
+	renderer->DrawLine(pb.bottomLeft, pb.bottomRight, SDL_Color{ 0, 0, 255, 255 });
+	renderer->DrawLine(pb.topRight, pb.bottomRight, SDL_Color{ 0, 0, 255, 255 });
+}
+
+void ParticleSystem::ResetBox()
+{
+	pb.topLeft = Position() + Vector2{ -g_Settings.boxWidth / 2.0f, -g_Settings.boxHeight / 2.0f };
+	pb.topRight = Position() + Vector2{ g_Settings.boxWidth / 2.0f, -g_Settings.boxHeight / 2.0f };
+
+	pb.bottomLeft = Position() + Vector2{ -g_Settings.boxWidth / 2.0f, g_Settings.boxHeight / 2.0f };
+	pb.bottomRight = Position() + Vector2{ g_Settings.boxWidth / 2.0f, g_Settings.boxHeight / 2.0f };
 }
 
 void ParticleSystem::SpawnCircle(int x, int y, float rad)

@@ -14,6 +14,9 @@ namespace DesktopSailboat
 
 		int fpsLimit = 60;
 		int simFpsLimit = 60;
+
+		float boxHeight = 200;
+		float boxWidth = 300;
 	};
 }
 

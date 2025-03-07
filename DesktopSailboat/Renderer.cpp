@@ -80,3 +80,9 @@ void Renderer::DrawCircle(const SDL_Point& center, const float radius, const SDL
 
 	SDL_RenderPoints(renderer, points.data(), points.size());
 }
+
+void Renderer::DrawLine(const Vector2& start, const Vector2& end, const SDL_Color& color)
+{
+	SDL_SetRenderDrawColor(renderer, color.r, color.g, color.b, color.a);
+	SDL_RenderLine(renderer, start.x, start.y, end.x, end.y);
+}

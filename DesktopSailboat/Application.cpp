@@ -57,6 +57,10 @@ void Application::Run()
 
 	bool f1Check = false;
 	int tabNumber = 0;
+	int sizeX, sizeY;
+	SDL_GetWindowSize(window->GetSDLWindow(), &sizeX, &sizeY);
+	particleSystem->Position({ sizeX / 2.0f, sizeY / 2.0f });
+	particleSystem->ResetBox();
 	// Game Loop
 	while (isRunning)
 	{
@@ -236,6 +240,11 @@ void Application::Run()
 					}
 
 
+					if (ImGui::InputFloat("Box Width", &g_Settings.boxWidth) || ImGui::InputFloat("Box Height", &g_Settings.boxHeight))
+					{
+						particleSystem->ResetBox();
+					}
+					
 			}
 			
 
