@@ -140,6 +140,7 @@ void Application::Run()
 			SDL_SetWindowPosition(window->GetSDLWindow(), rect.x, rect.y);
 		}
 
+		// TODO: Move this to a function in the GUI Renderer or just somewhere else
 		if (showSettings)
 		{
 			

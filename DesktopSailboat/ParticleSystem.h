@@ -27,6 +27,8 @@ public:
 	ParticleSystem(std::shared_ptr<Renderer> _renderer, std::shared_ptr<Window> _window) : renderer(_renderer), window(_window) {}
 	ParticleSystem() : renderer(nullptr), window(nullptr) {}
 
+	~ParticleSystem();
+
 	void Start();
 	void Update();
 	void Render();
@@ -34,6 +36,19 @@ public:
 	void ResetBox();
 
 	void SpawnCircle(int x, int y, float rad);
+
+private:
+	void HandleUserInput();
+	void UpdateParticles();
+
+	void ResetParticles();
+	void ClearParticles();
+	void SpawnParticles();
+
+	void InitSPH();
+	void Integrate();
+	void ComputeDensityPressure();
+	void ComputeForces();
 
 private:
 	std::shared_ptr<Renderer> renderer;

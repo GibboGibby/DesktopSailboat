@@ -7,6 +7,11 @@ inline float Squared(float val) {
 	return val * val;
 }
 
+ParticleSystem::~ParticleSystem()
+{
+	// Clear Particles (Delete Memory)
+}
+
 void ParticleSystem::Start()
 {
 	ResetBox();
@@ -14,6 +19,10 @@ void ParticleSystem::Start()
 
 void ParticleSystem::Update()
 {
+	ComputeDensityPressure();
+	ComputeForces();
+	Integrate();
+
 	float mouseX, mouseY;
 	SDL_GetGlobalMouseState(&mouseX, &mouseY);
 	int windowX, windowY;
@@ -74,7 +83,7 @@ void ParticleSystem::Render()
 	for (int i = 0; i < circles.size(); i++)
 	{
 		Circle circle = circles[i];
-		renderer->DrawCircle(SDL_Point{ (int)circle.pos.x, (int)circle.pos.y }, circle.radius, SDL_Color{ 0, 0, 255, 255 });
+		renderer->DrawFilledCircle(SDL_Point{ (int)circle.pos.x, (int)circle.pos.y }, circle.radius, SDL_Color{ 51, 153, 255, 255 });
 	}
 
 	renderer->DrawLine(pb.topLeft, pb.topRight, SDL_Color{ 0, 0, 255, 255 });
@@ -97,3 +106,41 @@ void ParticleSystem::SpawnCircle(int x, int y, float rad)
 	circles.push_back({ Vector2((float)x,(float)y), rad });
 }
 
+void ParticleSystem::HandleUserInput()
+{
+	
+}
+
+void ParticleSystem::UpdateParticles()
+{
+
+}
+
+void ParticleSystem::ResetParticles()
+{
+}
+
+void ParticleSystem::ClearParticles()
+{
+}
+
+void ParticleSystem::SpawnParticles()
+{
+
+}
+
+void ParticleSystem::InitSPH()
+{
+}
+
+void ParticleSystem::Integrate()
+{
+}
+
+void ParticleSystem::ComputeDensityPressure()
+{
+}
+
+void ParticleSystem::ComputeForces()
+{
+}

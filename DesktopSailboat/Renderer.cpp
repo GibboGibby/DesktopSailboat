@@ -86,3 +86,20 @@ void Renderer::DrawLine(const Vector2& start, const Vector2& end, const SDL_Colo
 	SDL_SetRenderDrawColor(renderer, color.r, color.g, color.b, color.a);
 	SDL_RenderLine(renderer, start.x, start.y, end.x, end.y);
 }
+
+void Renderer::DrawFilledCircle(const SDL_Point& pos, const float radius, const SDL_Color& color)
+{
+	SDL_SetRenderDrawColor(renderer, color.r, color.g, color.b, color.a);
+	for (int w = 0; w < radius * 2; w++)
+	{
+		for (int h = 0; h < radius * 2; h++)
+		{
+			int dx = radius - w; // horizontal offset
+			int dy = radius - h; // vertical offset
+			if ((dx * dx + dy * dy) <= (radius * radius))
+			{
+				SDL_RenderPoint(renderer, pos.x + dx, pos.y +dy);
+			}
+		}
+	}
+}
