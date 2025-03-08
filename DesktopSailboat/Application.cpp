@@ -61,6 +61,7 @@ void Application::Run()
 	SDL_GetWindowSize(window->GetSDLWindow(), &sizeX, &sizeY);
 	particleSystem->Position({ sizeX / 2.0f, sizeY / 2.0f });
 	particleSystem->ResetBox();
+	particleSystem->Start();
 	// Game Loop
 	while (isRunning)
 	{

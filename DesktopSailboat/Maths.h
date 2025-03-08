@@ -61,6 +61,11 @@ struct Vector2
 		return res;
 	}
 
+	Vector2 operator-() const
+	{
+		return Vector2(-x, -y);
+	}
+
 	Vector2 operator* (const Vector2& vec) const
 	{
 		Vector2 res;
@@ -78,10 +83,31 @@ struct Vector2
 	}
 
 
+	Vector2 operator/ (const float& val) const
+	{
+		return Vector2(this->x / val, this->y / val);
+	}
+
+	Vector2 operator+= (const Vector2& val) const
+	{
+		return Vector2(this->x + val.x, this->y + val.y);
+	}
+
+
 	
 	float Magnitude()
 	{
 		return sqrt(x * x + y * y);
+	}
+
+	float norm()
+	{
+		return sqrt(x * x + y * y);
+	}
+	
+	float squaredNorm()
+	{
+		return x * x + y * y;
 	}
 
 	float Dot(const Vector2& other)
@@ -138,6 +164,7 @@ struct Vector2d
 	}
 
 
+
 	float Magnitude()
 	{
 		return sqrt(x * x + y * y);
@@ -153,3 +180,8 @@ struct Vector2d
 		return { 0.0f,0.0f };
 	}
 };
+
+inline Vector2 operator* (const float& l, const Vector2& right)
+{
+	return Vector2(right.x * l, right.y * l);
+}

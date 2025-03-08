@@ -10,7 +10,7 @@ class Window
 
 public:
 	
-	Window(int width = 600, int height = 600, std::string title = "Desktop Sailboat");
+	Window(int width = 1280, int height = 720, std::string title = "Desktop Sailboat");
 	~Window();
 
 	HWND GetWindowHandle();
