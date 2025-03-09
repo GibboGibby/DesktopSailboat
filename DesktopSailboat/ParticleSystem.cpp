@@ -131,6 +131,15 @@ void ParticleSystem::ResetParticles()
 	InitSPH();
 }
 
+void ParticleSystem::AddForceToAllParticles(Vector2 force)
+{
+	for (auto& particle : particles)
+	{
+		particle.v.x += force.x;
+		particle.v.y += force.y;
+	}
+}
+
 void ParticleSystem::ClearParticles()
 {
 	particles.clear();

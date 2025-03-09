@@ -54,6 +54,8 @@ void Application::Run()
 	float xOffset = 0.0f;
 	float yOffset = 0.0f;
 
+	Vector2 startPos(0.0f, 0.0f);
+
 	bool movingWindow = false;
 
 	bool f1Check = false;
@@ -188,7 +190,7 @@ void Application::Run()
 
 							xOffset = wx - mx;
 							yOffset = wy - my;
-
+							startPos = Vector2(wx, wy);
 						}
 					}
 					else
@@ -196,6 +198,11 @@ void Application::Run()
 						if (movingWindow)
 						{
 							movingWindow = false;
+							int wx, wy;
+							SDL_GetWindowPosition(window->GetSDLWindow(), &wx, &wy);
+							Vector2 movedAmt(wx - startPos.x, my - startPos.y);
+							std::cout << "Moved amt = " << movedAmt.x << ", " << movedAmt.y << std::endl;
+							particleSystem->AddForceToAllParticles(movedAmt* 3.0f);
 						}
 					}
 

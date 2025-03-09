@@ -28,7 +28,7 @@ struct ParticleBox
 const static Vector2d G(0.f, 10.f);   // external (gravitational) forces
 const static float REST_DENS = 300.f;  // rest density
 const static float GAS_CONST = 2000.f; // const for equation of state
-const static float H = 8.f;           // kernel radius
+const static float H = 12.f;           // kernel radius
 const static float HSQ = H * H;        // radius^2 for optimization
 const static float MASS = 2.5f;        // assume all particles have the same mass
 const static float VISC = 200.f;       // viscosity constant
@@ -65,6 +65,8 @@ public:
 
 	void SpawnParticle();
 	void ResetParticles();
+
+	void AddForceToAllParticles(Vector2 force);
 private:
 	void HandleUserInput();
 	void UpdateParticles();
