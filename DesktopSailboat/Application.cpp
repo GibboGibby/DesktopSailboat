@@ -1,5 +1,6 @@
 #include "Application.h"
 #include "Settings.h"
+#include "ParticleSystem.h"
 
 bool Application::IsPointInsideObject(int x, int y, SDL_Rect object)
 {
@@ -160,6 +161,11 @@ void Application::Run()
 			{
 				tabNumber = 1;
 			}
+			ImGui::SameLine();
+			if (ImGui::Button("SPH Stuff"))
+			{
+				tabNumber = 2;
+			}
 			ImGui::NewLine();
 
 			switch (tabNumber)
@@ -246,7 +252,17 @@ void Application::Run()
 					{
 						particleSystem->ResetBox();
 					}
-					
+					break;
+
+				case 2:
+					if (ImGui::Button("Spawn Another Particle"))
+					{
+						particleSystem->SpawnParticle();
+					}
+					if (ImGui::Button("Reset SPH"))
+					{
+						particleSystem->ResetParticles();
+					}
 			}
 			
 

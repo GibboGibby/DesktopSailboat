@@ -123,7 +123,7 @@ struct Vector2
 	Vector2 Normalized()
 	{
 		float mag = Magnitude();
-		return { x / mag, y / mag };
+		return Vector2{ x / mag, y / mag };
 	}
 
 };
@@ -140,30 +140,26 @@ struct Vector2d
 	double y;
 
 	Vector2d(float x = 0.0f, float y = 0.0f) : x(x), y(y) {}
+	Vector2d(double x = 0.0f, double y = 0.0f) : x(x), y(y) {}
+	Vector2d() : x(0.0), y(0.0) {}
 
 	//Vector2d(double x = 0.0, double y = 0.0) : x(x), y(y) {}
 
 	Vector2d operator+(const Vector2d& vec) const
 	{
-		Vector2d res;
-		res.x = this->x + vec.x;
-		res.y = this->y + vec.y;
+		Vector2d res(this->x + vec.x, this->y + vec.y);
 		return res;
 	}
 
 	Vector2d operator-(const Vector2d& vec) const
 	{
-		Vector2d res;
-		res.x = this->x - vec.x;
-		res.y = this->y - vec.y;
+		Vector2d res(this->x - vec.x, this->y - vec.y);
 		return res;
 	}
 
 	Vector2d operator* (const Vector2d& vec) const
 	{
-		Vector2d res;
-		res.x = this->x * vec.x;
-		res.y = this->y * vec.y;
+		Vector2d res(this->x * vec.x, this->y * vec.y);
 		return res;
 	}
 
@@ -184,6 +180,12 @@ struct Vector2d
 		return x * x + y * y;
 	}
 
+	Vector2d Normalized()
+	{
+		float mag = Magnitude();
+		return Vector2d{ x / mag, y / mag };
+	}
+
 	float Dot(const Vector2d& other)
 	{
 		return x * other.x + y * other.y;
@@ -196,9 +198,7 @@ struct Vector2d
 
 	Vector2d operator* (const float& val) const
 	{
-		Vector2d res;
-		res.x = this->x * val;
-		res.y = this->y * val;
+		Vector2d res(this->x * val, this->y * val);
 		return res;
 	}
 
@@ -208,12 +208,19 @@ struct Vector2d
 		return Vector2d(this->x / val, this->y / val);
 	}
 
-	Vector2d operator+= (const Vector2d& val) const
+	Vector2d& operator+= (const Vector2d& val)
 	{
-		return Vector2d(this->x + val.x, this->y + val.y);
+		this->x += val.x;
+		this->y += val.y;
+		return *this;
 	}
 
-	double operator() (const int& pos) const
+	Vector2d operator-() const
+	{
+		return Vector2d(-x, -y);
+	}
+
+	double& operator() (const int& pos)
 	{
 		switch (pos)
 		{
@@ -222,7 +229,7 @@ struct Vector2d
 		case 1:
 			return y;
 		default:
-			return 0;
+			return x;
 		}
 	}
 };
@@ -230,4 +237,9 @@ struct Vector2d
 inline Vector2 operator* (const float& l, const Vector2& right)
 {
 	return Vector2(right.x * l, right.y * l);
+}
+
+inline Vector2d operator* (const float& l, const Vector2d& r)
+{
+	return Vector2d(r.x * l, r.y * l);
 }

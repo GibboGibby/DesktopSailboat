@@ -25,10 +25,10 @@ struct ParticleBox
 };
 
 // solver parameters
-const static Vector2 G(0.f, -10.f);   // external (gravitational) forces
+const static Vector2d G(0.f, 10.f);   // external (gravitational) forces
 const static float REST_DENS = 300.f;  // rest density
 const static float GAS_CONST = 2000.f; // const for equation of state
-const static float H = 16.f;           // kernel radius
+const static float H = 8.f;           // kernel radius
 const static float HSQ = H * H;        // radius^2 for optimization
 const static float MASS = 2.5f;        // assume all particles have the same mass
 const static float VISC = 200.f;       // viscosity constant
@@ -44,8 +44,8 @@ const static float VISC_LAP = 40.f / (M_PI * pow(H, 5.f));
 const static float EPS = H; // boundary epsilon
 const static float BOUND_DAMPING = -0.5f;
 
-const int DAM_PARTICLES = 25;
-
+const int DAM_PARTICLES = 250;
+const static int BLOCK_PARTICLES = 100;
 
 class ParticleSystem : public GameObject
 {
@@ -63,13 +63,13 @@ public:
 
 	void SpawnCircle(int x, int y, float rad);
 
+	void SpawnParticle();
+	void ResetParticles();
 private:
 	void HandleUserInput();
 	void UpdateParticles();
 
-	void ResetParticles();
 	void ClearParticles();
-	void SpawnParticles();
 
 	void InitSPH();
 	void Integrate();
