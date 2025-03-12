@@ -144,6 +144,12 @@ void Application::Run()
 			SDL_SetWindowPosition(window->GetSDLWindow(), rect.x, rect.y);
 		}
 
+		if (state[SDL_SCANCODE_P])
+		{
+			ImGuiIO& io = ImGui::GetIO();
+			std::cout << "Framerate for " << particleSystem->GetNumberOfParticles() << " particles " << " is " << io.Framerate << " fps" << std::endl;
+		}
+
 		// TODO: Move this to a function in the GUI Renderer or just somewhere else
 		if (showSettings)
 		{

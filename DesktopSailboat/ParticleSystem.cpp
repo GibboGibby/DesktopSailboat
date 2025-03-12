@@ -131,6 +131,11 @@ void ParticleSystem::ResetParticles()
 	InitSPH();
 }
 
+size_t ParticleSystem::GetNumberOfParticles()
+{
+	return particles.size();
+}
+
 void ParticleSystem::AddForceToAllParticles(Vector2 force)
 {
 	for (auto& particle : particles)

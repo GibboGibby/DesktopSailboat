@@ -65,6 +65,7 @@ public:
 
 	void SpawnParticle();
 	void ResetParticles();
+	size_t GetNumberOfParticles();
 
 	void AddForceToAllParticles(Vector2 force);
 private:
