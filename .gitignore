@@ -361,3 +361,8 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+/DesktopSailboat/Particle.cpp
+/DesktopSailboat/GridSquare.h
+/DesktopSailboat/GridSquare.cpp
+/DesktopSailboat/Grid.h
+/DesktopSailboat/Grid.cpp
