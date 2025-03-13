@@ -1,6 +1,7 @@
 #include "Application.h"
 #include "Settings.h"
 #include "ParticleSystem.h"
+#include "Grid.h"
 
 bool Application::IsPointInsideObject(int x, int y, SDL_Rect object)
 {
@@ -41,6 +42,9 @@ bool Application::Init()
 void Application::Run()
 {
 	std::unique_ptr<ParticleSystem> particleSystem = std::make_unique<ParticleSystem>(renderer, window);
+	std::shared_ptr<Grid> grid = std::make_shared<Grid>();
+	grid->InitGrid({ 25, 25 }, window->GetWindowSize());
+	particleSystem->SetGrid(grid);
 	//ParticleSystem* particleSystem = new ParticleSystem(renderer, window);
 	GTimer fpsTimer;
 	GTimer capTimer;

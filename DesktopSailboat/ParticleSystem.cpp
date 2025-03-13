@@ -2,6 +2,8 @@
 #include "Renderer.h"
 #include "Window.h"
 #include "Settings.h"
+#include "Grid.h"
+#include "GridSquare.h"
 
 inline float Squared(float val) {
 	return val * val;
@@ -167,6 +169,7 @@ void ParticleSystem::SpawnParticle()
 				if (placed++ < BLOCK_PARTICLES && particles.size() < g_Settings.particleCount)
 				{
 					particles.push_back(std::make_shared<Particle>(x, y));
+					grid->AtFromParticleSystemPosition(Vector2{ x,y })->AddParticle(particles.back());
 					//particles.push_back(Particle(x, y));
 				}
 			}
@@ -186,6 +189,7 @@ void ParticleSystem::InitSPH()
 			{
 				float jitter = static_cast<float>(rand()) / static_cast<float>(RAND_MAX);
 				particles.push_back(std::make_shared<Particle>(x + jitter, y));
+				grid->AtFromParticleSystemPosition(Vector2{ x,y })->AddParticle(particles.back());
 				//particles.push_back(Particle(x + jitter, y));
 			}
 			else
@@ -202,6 +206,8 @@ void ParticleSystem::Integrate()
 	double WIDTH = g_Settings.boxWidth;
 	for (auto& p : particles)
 	{
+		Vector2b particleOldPos = grid->WorldToGridPos(Vector2{ static_cast<float>(p->x.x), static_cast<float>(p->x.y) });
+		
 		// forward Euler integration
 		p->v += DT * p->f / p->rho;
 		p->x += DT * p->v;
@@ -227,6 +233,15 @@ void ParticleSystem::Integrate()
 			p->v(1) *= BOUND_DAMPING;
 			p->x(1) = HEIGHT - EPS;
 		}
+
+		Vector2b particleNewPos = grid->WorldToGridPos(Vector2{ static_cast<float>(p->x.x), static_cast<float>(p->x.y) });
+
+		if (!(particleOldPos.x == particleNewPos.x && particleOldPos.y == particleNewPos.y))
+		{
+			// If it is in a new grid pos
+			grid->At(particleOldPos)->RemoveParticle(p->id);
+			grid->At(particleNewPos)->AddParticle(p);
+		}
 	}
 }
 
@@ -235,15 +250,21 @@ void ParticleSystem::ComputeDensityPressure()
 	for (auto& pi : particles)
 	{
 		pi->rho = 0.f;
-		for (auto& pj : particles)
-		{
-			Vector2d rij = pj->x - pi->x;
-			float r2 = rij.squaredNorm();
 
-			if (r2 < HSQ)
+		std::vector<GridSquare*> squares = grid->GetGridSquaresAroundPosition(grid->WorldToGridPos(pi->x));
+		for (auto& square : squares)
+		{
+			auto& map = square->GetMap();
+			for (auto& pair : map)
 			{
-				// this computation is symmetric
-				pi->rho += MASS * POLY6 * pow(HSQ - r2, 3.f);
+				auto pj = pair.second.lock();
+				Vector2d rij = pj->x - pi->x;
+				float r2 = rij.squaredNorm();
+
+				if (r2 < HSQ)
+				{
+					pi->rho += MASS * POLY6 * pow(HSQ - r2, 3.f);
+				}
 			}
 		}
 		pi->p = GAS_CONST * (pi->rho - REST_DENS);
@@ -256,24 +277,32 @@ void ParticleSystem::ComputeForces()
 	{
 		Vector2d fpress(0.f, 0.f);
 		Vector2d fvisc(0.f, 0.f);
-		for (auto& pj : particles)
+
+		std::vector<GridSquare*> squares = grid->GetGridSquaresAroundPosition(grid->WorldToGridPos(pi->x));
+		for (auto& square : squares)
 		{
-			if (&pi == &pj)
+			auto& map = square->GetMap();
+			for (auto& pair : map)
 			{
-				continue;
-			}
+				auto pj = pair.second.lock();
+				if (&pi == &pj)
+				{
+					continue;
+				}
 
-			Vector2d rij = pj->x - pi->x;
-			float r = rij.norm();
+				Vector2d rij = pj->x - pi->x;
+				float r = rij.norm();
 
-			if (r < H)
-			{
-				// compute pressure force contribution
-				fpress += -rij.Normalized() * MASS * (pi->p + pj->p) / (2.f * pj->rho) * SPIKY_GRAD * pow(H - r, 3.f);
-				// compute viscosity force contribution
-				fvisc += VISC * MASS * (pj->v - pi->v) / pj->rho * VISC_LAP * (H - r);
+				if (r < H)
+				{
+					// compute pressure force contribution
+					fpress += -rij.Normalized() * MASS * (pi->p + pj->p) / (2.f * pj->rho) * SPIKY_GRAD * pow(H - r, 3.f);
+					// compute viscosity force contribution
+					fvisc += VISC * MASS * (pj->v - pi->v) / pj->rho * VISC_LAP * (H - r);
+				}
 			}
 		}
+
 		Vector2d fgrav = G * MASS / pi->rho;
 		pi->f = fpress + fvisc + fgrav;
 	}

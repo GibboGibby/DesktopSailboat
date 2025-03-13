@@ -1,5 +1,6 @@
 #pragma once
 #include "math.h"
+#include <stdint.h>
 
 
 struct float2
@@ -243,3 +244,9 @@ inline Vector2d operator* (const float& l, const Vector2d& r)
 {
 	return Vector2d(r.x * l, r.y * l);
 }
+
+struct Vector2b
+{
+	uint8_t x;
+	uint8_t y;
+};
