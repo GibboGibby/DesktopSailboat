@@ -85,7 +85,7 @@ private:
 
 	std::vector<Circle> circles;
 
-	std::vector<std::unique_ptr<Particle>> particles;
+	std::vector<std::shared_ptr<Particle>> particles;
 
 	float boxHeight = 200;
 	float boxWidth = 300;

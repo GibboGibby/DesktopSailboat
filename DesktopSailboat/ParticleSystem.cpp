@@ -166,7 +166,7 @@ void ParticleSystem::SpawnParticle()
 			{
 				if (placed++ < BLOCK_PARTICLES && particles.size() < g_Settings.particleCount)
 				{
-					particles.push_back(std::make_unique<Particle>(x, y));
+					particles.push_back(std::make_shared<Particle>(x, y));
 					//particles.push_back(Particle(x, y));
 				}
 			}
@@ -185,7 +185,7 @@ void ParticleSystem::InitSPH()
 			if (particles.size() < DAM_PARTICLES)
 			{
 				float jitter = static_cast<float>(rand()) / static_cast<float>(RAND_MAX);
-				particles.push_back(std::make_unique<Particle>(x + jitter, y));
+				particles.push_back(std::make_shared<Particle>(x + jitter, y));
 				//particles.push_back(Particle(x + jitter, y));
 			}
 			else

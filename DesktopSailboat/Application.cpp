@@ -295,6 +295,8 @@ void Application::Run()
 					{
 						particleSystem->ResetParticles();
 					}
+
+					ImGui::Text("Number of Particles = %lli", particleSystem->GetNumberOfParticles());
 			}
 			
 
