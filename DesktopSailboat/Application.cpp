@@ -46,6 +46,10 @@ void Application::Run()
 	GTimer capTimer;
 	fpsTimer.Start();
 
+	float frameAverage = 0.0f;
+	int countedFrames = 0;
+	bool countingFrames = false;
+
 	float deltaTime = 0.0f;
 	float testPos1 = 0.0f;
 	testPos1 = window->GetWindowSize().x / 2.0f;
@@ -147,7 +151,20 @@ void Application::Run()
 		if (state[SDL_SCANCODE_P])
 		{
 			ImGuiIO& io = ImGui::GetIO();
-			std::cout << "Framerate for " << particleSystem->GetNumberOfParticles() << " particles " << " is " << io.Framerate << " fps" << std::endl;
+			//std::cout << "Framerate for " << particleSystem->GetNumberOfParticles() << " particles " << " is " << io.Framerate << " fps" << std::endl;
+			countedFrames++;
+			frameAverage += io.Framerate;
+			if (!countingFrames)
+				countingFrames = true;
+		}
+
+		if (!state[SDL_SCANCODE_P])
+		{
+			if (countingFrames)
+			{
+				countingFrames = false;
+				std::cout << "Frame Average over " << countedFrames << " frames is " << frameAverage / countedFrames << " fps" << std::endl;
+			}
 		}
 
 		// TODO: Move this to a function in the GUI Renderer or just somewhere else
@@ -218,6 +235,8 @@ void Application::Run()
 					}
 					ImGui::SameLine();
 					ImGui::Text("Counter = %d", counter);
+
+					ImGui::Text("Number of Particles = %lli", particleSystem->GetNumberOfParticles());
 
 					ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / io.Framerate, io.Framerate);
 					break;
