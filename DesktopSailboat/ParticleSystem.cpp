@@ -116,6 +116,11 @@ void ParticleSystem::SpawnCircle(int x, int y, float rad)
 	circles.push_back({ Vector2((float)x,(float)y), rad });
 }
 
+Vector2 ParticleSystem::GetSize()
+{
+	return Vector2{ pb.topRight.x - pb.topLeft.x, pb.bottomLeft.y - pb.topLeft.y };
+}
+
 void ParticleSystem::HandleUserInput()
 {
 	
@@ -272,7 +277,7 @@ void ParticleSystem::ComputeDensityPressure()
 		pi->p = GAS_CONST * (pi->rho - REST_DENS);
 	}
 }
-
+/*
 void ParticleSystem::ComputeForces()
 {
 	for (auto& pi : particles)
@@ -306,6 +311,46 @@ void ParticleSystem::ComputeForces()
 				}
 			}
 		}
+
+		Vector2d fgrav = G * MASS / pi->rho;
+		pi->f = fpress + fvisc + fgrav;
+	}
+}
+*/
+
+void ParticleSystem::ComputeForces()
+{
+	for (auto& pi : particles)
+	{
+		Vector2d fpress(0.f, 0.f);
+		Vector2d fvisc(0.f, 0.f);
+
+		std::vector<GridSquare*> squares = grid->GetGridSquaresAroundPosition(grid->WorldToGridPos(pi->x));
+		for (auto& square : squares)
+		{
+			auto& map = square->GetMap();
+			for (auto& pair : map)
+			{
+				auto pj = pair.second.lock();
+				if (pi->id == pj->id)
+				{
+					//std::cout << "Found self in the thing" << std::endl;
+					continue;
+				}
+
+				Vector2d rij = pj->x - pi->x;
+				float r = rij.norm();
+
+				if (r < H)
+				{
+					// compute pressure force contribution
+					fpress += -rij.Normalized() * MASS * (pi->p + pj->p) / (2.f * pj->rho) * SPIKY_GRAD * pow(H - r, 3.f);
+					// compute viscosity force contribution
+					fvisc += VISC * MASS * (pj->v - pi->v) / pj->rho * VISC_LAP * (H - r);
+				}
+			}
+		}
+
 
 		Vector2d fgrav = G * MASS / pi->rho;
 		pi->f = fpress + fvisc + fgrav;

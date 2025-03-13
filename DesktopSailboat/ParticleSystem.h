@@ -71,6 +71,8 @@ public:
 	void AddForceToAllParticles(Vector2 force);
 
 	void SetGrid(std::shared_ptr<Grid> _grid) { grid = _grid; }
+
+	Vector2 GetSize();
 private:
 	void HandleUserInput();
 	void UpdateParticles();

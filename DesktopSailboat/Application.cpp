@@ -43,8 +43,7 @@ void Application::Run()
 {
 	std::unique_ptr<ParticleSystem> particleSystem = std::make_unique<ParticleSystem>(renderer, window);
 	std::shared_ptr<Grid> grid = std::make_shared<Grid>();
-	grid->InitGrid({ 15, 15 }, window->GetWindowSize());
-	particleSystem->SetGrid(grid);
+	
 	//ParticleSystem* particleSystem = new ParticleSystem(renderer, window);
 	GTimer fpsTimer;
 	GTimer capTimer;
@@ -72,7 +71,14 @@ void Application::Run()
 	SDL_GetWindowSize(window->GetSDLWindow(), &sizeX, &sizeY);
 	particleSystem->Position({ sizeX / 2.0f, sizeY / 2.0f });
 	particleSystem->ResetBox();
+
+	std::cout << "Particle size: " << particleSystem->GetSize().x << ", " << particleSystem->GetSize().y << std::endl;
+	grid->InitGrid({ 25, 25 }, particleSystem->GetSize());
+	particleSystem->SetGrid(grid);
+
 	particleSystem->Start();
+
+	
 	// Game Loop
 	while (isRunning)
 	{
