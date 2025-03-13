@@ -190,6 +190,8 @@ void ParticleSystem::InitSPH()
 				float jitter = static_cast<float>(rand()) / static_cast<float>(RAND_MAX);
 				particles.push_back(std::make_shared<Particle>(x + jitter, y));
 				grid->AtFromParticleSystemPosition(Vector2{ x,y })->AddParticle(particles.back());
+				Vector2b gridPos = grid->WorldToGridPos(Vector2{ x,y });
+				std::cout << "Particle id: " << particles.back()->id << " added to grid pos: " << (int)gridPos.x << ", " << (int)gridPos.y << std::endl;
 				//particles.push_back(Particle(x + jitter, y));
 			}
 			else
