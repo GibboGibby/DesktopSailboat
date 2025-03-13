@@ -43,7 +43,7 @@ void Application::Run()
 {
 	std::unique_ptr<ParticleSystem> particleSystem = std::make_unique<ParticleSystem>(renderer, window);
 	std::shared_ptr<Grid> grid = std::make_shared<Grid>();
-	grid->InitGrid({ 25, 25 }, window->GetWindowSize());
+	grid->InitGrid({ 15, 15 }, window->GetWindowSize());
 	particleSystem->SetGrid(grid);
 	//ParticleSystem* particleSystem = new ParticleSystem(renderer, window);
 	GTimer fpsTimer;

@@ -9,9 +9,9 @@ void Grid::InitGrid(Vector2b _gridSize, Vector2 _screenSize)
 	int xLoop = static_cast<int>(ceil(screenSize.x) / static_cast<float>(gridSize.x));
 	int yLoop = static_cast<int>(ceil(screenSize.y) / static_cast<float>(gridSize.y));
 
-	for (int x = 0; x < xLoop; x++)
+	for (int x = 0; x <= xLoop; x++)
 	{
-		for (int y = 0; y < yLoop; y++)
+		for (int y = 0; y <= yLoop; y++)
 		{
 			grid.emplace(std::make_pair(static_cast<uint8_t>(x), static_cast<uint8_t>(y)), std::make_shared<GridSquare>());
 		}

@@ -277,15 +277,17 @@ void ParticleSystem::ComputeForces()
 	{
 		Vector2d fpress(0.f, 0.f);
 		Vector2d fvisc(0.f, 0.f);
+		Vector2b gridPos = grid->WorldToGridPos(Vector2{ static_cast<float>(pi->x.x), static_cast<float>(pi->x.y) });
 
-		std::vector<GridSquare*> squares = grid->GetGridSquaresAroundPosition(grid->WorldToGridPos(pi->x));
-		for (auto& square : squares)
+		std::vector<GridSquare*> toLookThrough = grid->GetGridSquaresAroundPosition(gridPos);
+		for (GridSquare* gs : toLookThrough)
 		{
-			auto& map = square->GetMap();
-			for (auto& pair : map)
+			std::map<short, std::weak_ptr<Particle>> map = gs->GetMap();
+			for (auto pair : map)
 			{
 				auto pj = pair.second.lock();
-				if (&pi == &pj)
+
+				if (pi->id == pj->id)
 				{
 					continue;
 				}
