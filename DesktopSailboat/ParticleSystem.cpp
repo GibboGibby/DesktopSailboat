@@ -82,9 +82,8 @@ void ParticleSystem::Render()
 {
 	for (int i = 0; i < particles.size(); i++)
 	{
-		Particle& particle = particles[i];
-		Vector2 pos = Position();
-		renderer->DrawFilledCircle(SDL_Point{ (int)(pb.topLeft.x + particle.x.x), (int)(pb.topLeft.y + particle.x.y) }, H / 2, SDL_Color{ 51, 153, 255, 255 });
+		auto& particle = particles[i];
+		renderer->DrawFilledCircle(SDL_Point{ (int)(pb.topLeft.x + particle->x.x), (int)(pb.topLeft.y + particle->x.y) }, H / 2, SDL_Color{ 51, 153, 255, 255 });
 	}
 	
 	/*
@@ -140,8 +139,8 @@ void ParticleSystem::AddForceToAllParticles(Vector2 force)
 {
 	for (auto& particle : particles)
 	{
-		particle.v.x += force.x;
-		particle.v.y += force.y;
+		particle->v.x += force.x;
+		particle->v.y += force.y;
 	}
 }
 
@@ -167,7 +166,8 @@ void ParticleSystem::SpawnParticle()
 			{
 				if (placed++ < BLOCK_PARTICLES && particles.size() < g_Settings.particleCount)
 				{
-					particles.push_back(Particle(x, y));
+					particles.push_back(std::make_unique<Particle>(x, y));
+					//particles.push_back(Particle(x, y));
 				}
 			}
 		}
@@ -185,7 +185,8 @@ void ParticleSystem::InitSPH()
 			if (particles.size() < DAM_PARTICLES)
 			{
 				float jitter = static_cast<float>(rand()) / static_cast<float>(RAND_MAX);
-				particles.push_back(Particle(x + jitter, y));
+				particles.push_back(std::make_unique<Particle>(x + jitter, y));
+				//particles.push_back(Particle(x + jitter, y));
 			}
 			else
 			{
@@ -202,29 +203,29 @@ void ParticleSystem::Integrate()
 	for (auto& p : particles)
 	{
 		// forward Euler integration
-		p.v += DT * p.f / p.rho;
-		p.x += DT * p.v;
+		p->v += DT * p->f / p->rho;
+		p->x += DT * p->v;
 
 		// enforce boundary conditions
-		if (p.x(0) - EPS < 0.f)
+		if (p->x(0) - EPS < 0.f)
 		{
-			p.v(0) *= BOUND_DAMPING;
-			p.x(0) = EPS;
+			p->v(0) *= BOUND_DAMPING;
+			p->x(0) = EPS;
 		}
-		if (p.x(0) + EPS > WIDTH)
+		if (p->x(0) + EPS > WIDTH)
 		{
-			p.v(0) *= BOUND_DAMPING;
-			p.x(0) = WIDTH - EPS;
+			p->v(0) *= BOUND_DAMPING;
+			p->x(0) = WIDTH - EPS;
 		}
-		if (p.x(1) - EPS < 0.f)
+		if (p->x(1) - EPS < 0.f)
 		{
-			p.v(1) *= BOUND_DAMPING;
-			p.x(1) = EPS;
+			p->v(1) *= BOUND_DAMPING;
+			p->x(1) = EPS;
 		}
-		if (p.x(1) + EPS > HEIGHT)
+		if (p->x(1) + EPS > HEIGHT)
 		{
-			p.v(1) *= BOUND_DAMPING;
-			p.x(1) = HEIGHT - EPS;
+			p->v(1) *= BOUND_DAMPING;
+			p->x(1) = HEIGHT - EPS;
 		}
 	}
 }
@@ -233,19 +234,19 @@ void ParticleSystem::ComputeDensityPressure()
 {
 	for (auto& pi : particles)
 	{
-		pi.rho = 0.f;
+		pi->rho = 0.f;
 		for (auto& pj : particles)
 		{
-			Vector2d rij = pj.x - pi.x;
+			Vector2d rij = pj->x - pi->x;
 			float r2 = rij.squaredNorm();
 
 			if (r2 < HSQ)
 			{
 				// this computation is symmetric
-				pi.rho += MASS * POLY6 * pow(HSQ - r2, 3.f);
+				pi->rho += MASS * POLY6 * pow(HSQ - r2, 3.f);
 			}
 		}
-		pi.p = GAS_CONST * (pi.rho - REST_DENS);
+		pi->p = GAS_CONST * (pi->rho - REST_DENS);
 	}
 }
 
@@ -262,18 +263,18 @@ void ParticleSystem::ComputeForces()
 				continue;
 			}
 
-			Vector2d rij = pj.x - pi.x;
+			Vector2d rij = pj->x - pi->x;
 			float r = rij.norm();
 
 			if (r < H)
 			{
 				// compute pressure force contribution
-				fpress += -rij.Normalized() * MASS * (pi.p + pj.p) / (2.f * pj.rho) * SPIKY_GRAD * pow(H - r, 3.f);
+				fpress += -rij.Normalized() * MASS * (pi->p + pj->p) / (2.f * pj->rho) * SPIKY_GRAD * pow(H - r, 3.f);
 				// compute viscosity force contribution
-				fvisc += VISC * MASS * (pj.v - pi.v) / pj.rho * VISC_LAP * (H - r);
+				fvisc += VISC * MASS * (pj->v - pi->v) / pj->rho * VISC_LAP * (H - r);
 			}
 		}
-		Vector2d fgrav = G * MASS / pi.rho;
-		pi.f = fpress + fvisc + fgrav;
+		Vector2d fgrav = G * MASS / pi->rho;
+		pi->f = fpress + fvisc + fgrav;
 	}
 }
