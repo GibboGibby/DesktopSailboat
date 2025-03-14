@@ -54,7 +54,7 @@ std::vector<GridSquare*> Grid::GetGridSquaresAroundPosition(Vector2b pos)
 	{
 		for (int j = -1; j < 2; j++)
 		{
-			auto t = At(pos.x + i, pos.y + i);
+			auto t = At((int)pos.x + i, (int)pos.y + i);
 			if (t == nullptr) continue;
 			gridSquares.push_back(t);
 		}

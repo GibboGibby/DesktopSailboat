@@ -196,7 +196,8 @@ void ParticleSystem::InitSPH()
 				particles.push_back(std::make_shared<Particle>(x + jitter, y));
 				grid->AtFromParticleSystemPosition(Vector2{ x,y })->AddParticle(particles.back());
 				Vector2b gridPos = grid->WorldToGridPos(Vector2{ x,y });
-				std::cout << "Particle id: " << particles.back()->id << " added to grid pos: " << (int)gridPos.x << ", " << (int)gridPos.y << std::endl;
+				std::cout << "Particle id: " << particles.back()->id << " at pos: " << x << ", " << y << " added to grid pos: " << (int)gridPos.x << ", " << (int)gridPos.y << std::endl;
+				return;
 				//particles.push_back(Particle(x + jitter, y));
 			}
 			else
@@ -248,6 +249,7 @@ void ParticleSystem::Integrate()
 			// If it is in a new grid pos
 			grid->At(particleOldPos)->RemoveParticle(p->id);
 			grid->At(particleNewPos)->AddParticle(p);
+			std::cout << "Particle " << p->id << " moved from " << (int)particleOldPos.x << ", " << (int)particleOldPos.y << " to " << (int)particleNewPos.x << ", " << (int)particleNewPos.y << std::endl;
 		}
 	}
 }
