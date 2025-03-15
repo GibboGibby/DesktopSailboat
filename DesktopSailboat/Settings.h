@@ -1,10 +1,11 @@
 #pragma once
 #include "SDL3/SDL_iostream.h"
+#include "Maths.h"
 
 namespace DesktopSailboat
 {
 
-	struct Settings
+	struct ApplicationSettings
 	{
 		int particleCount = 20000;
 		float viscosity = 5.0f;
@@ -17,6 +18,20 @@ namespace DesktopSailboat
 
 		float boxHeight = 200;
 		float boxWidth = 300;
+	};
+
+	struct SimulationSettings
+	{
+		Vector2 Gravity = { 0.f, 10.f };
+		float RestDensity = 300.f;
+
+		int BlockParticles = 100;
+	};
+
+	struct Settings
+	{
+		ApplicationSettings app;
+		SimulationSettings sim;
 	};
 }
 

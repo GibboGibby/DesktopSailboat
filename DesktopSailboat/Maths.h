@@ -141,9 +141,10 @@ struct Vector2d
 
 	Vector2d(float x = 0.0f, float y = 0.0f) : x(x), y(y) {}
 	Vector2d(double x = 0.0f, double y = 0.0f) : x(x), y(y) {}
-	Vector2d() : x(0.0), y(0.0) {}
+	Vector2d() : x(0.0f), y(0.0f) {}
 
 	//Vector2d(double x = 0.0, double y = 0.0) : x(x), y(y) {}
+
 
 	Vector2d operator+(const Vector2d& vec) const
 	{

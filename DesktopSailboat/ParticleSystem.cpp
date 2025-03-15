@@ -3,6 +3,7 @@
 #include "Window.h"
 #include "Settings.h"
 
+
 inline float Squared(float val) {
 	return val * val;
 }
@@ -103,11 +104,11 @@ void ParticleSystem::Render()
 
 void ParticleSystem::ResetBox()
 {
-	pb.topLeft = Position() + Vector2{ -g_Settings.boxWidth / 2.0f, -g_Settings.boxHeight / 2.0f };
-	pb.topRight = Position() + Vector2{ g_Settings.boxWidth / 2.0f, -g_Settings.boxHeight / 2.0f };
+	pb.topLeft = Position() + Vector2{ -g_Settings.app.boxWidth / 2.0f, -g_Settings.app.boxHeight / 2.0f };
+	pb.topRight = Position() + Vector2{ g_Settings.app.boxWidth / 2.0f, -g_Settings.app.boxHeight / 2.0f };
 
-	pb.bottomLeft = Position() + Vector2{ -g_Settings.boxWidth / 2.0f, g_Settings.boxHeight / 2.0f };
-	pb.bottomRight = Position() + Vector2{ g_Settings.boxWidth / 2.0f, g_Settings.boxHeight / 2.0f };
+	pb.bottomLeft = Position() + Vector2{ -g_Settings.app.boxWidth / 2.0f, g_Settings.app.boxHeight / 2.0f };
+	pb.bottomRight = Position() + Vector2{ g_Settings.app.boxWidth / 2.0f, g_Settings.app.boxHeight / 2.0f };
 }
 
 void ParticleSystem::SpawnCircle(int x, int y, float rad)
@@ -152,9 +153,9 @@ void ParticleSystem::ClearParticles()
 
 void ParticleSystem::SpawnParticle()
 {
-	double HEIGHT = g_Settings.boxHeight;
-	double WIDTH = g_Settings.boxWidth;
-	if (particles.size() >= g_Settings.particleCount)
+	double HEIGHT = g_Settings.app.boxHeight;
+	double WIDTH = g_Settings.app.boxWidth;
+	if (particles.size() >= g_Settings.app.particleCount)
 	{
 		std::cout << "maximum number of particles reached" << std::endl;
 	}
@@ -165,7 +166,7 @@ void ParticleSystem::SpawnParticle()
 		{
 			for (float x = WIDTH / 2.f - HEIGHT / 5.f; x <= WIDTH / 2.f + HEIGHT / 5.f; x += H * 0.95f)
 			{
-				if (placed++ < BLOCK_PARTICLES && particles.size() < g_Settings.particleCount)
+				if (placed++ < g_Settings.sim.BlockParticles && particles.size() < g_Settings.app.particleCount)
 				{
 					particles.push_back(Particle(x, y));
 				}
@@ -176,8 +177,8 @@ void ParticleSystem::SpawnParticle()
 
 void ParticleSystem::InitSPH()
 {
-	double HEIGHT = g_Settings.boxHeight;
-	double WIDTH = g_Settings.boxWidth;
+	double HEIGHT = g_Settings.app.boxHeight;
+	double WIDTH = g_Settings.app.boxWidth;
 	for (float y = EPS; y < HEIGHT - EPS * 2.0f; y += H)
 	{
 		for (float x = WIDTH / 4; x <= WIDTH / 2; x += H)
@@ -197,8 +198,8 @@ void ParticleSystem::InitSPH()
 
 void ParticleSystem::Integrate()
 {
-	double HEIGHT = g_Settings.boxHeight;
-	double WIDTH = g_Settings.boxWidth;
+	double HEIGHT = g_Settings.app.boxHeight;
+	double WIDTH = g_Settings.app.boxWidth;
 	for (auto& p : particles)
 	{
 		// forward Euler integration
@@ -273,7 +274,8 @@ void ParticleSystem::ComputeForces()
 				fvisc += VISC * MASS * (pj.v - pi.v) / pj.rho * VISC_LAP * (H - r);
 			}
 		}
-		Vector2d fgrav = G * MASS / pi.rho;
+		Vector2d fgrav = Vector2d{ g_Settings.sim.Gravity.x, g_Settings.sim.Gravity.y } * MASS / pi.rho;
+		//Vector2d fgrav = G * MASS / pi.rho;
 		pi.f = fpress + fvisc + fgrav;
 	}
 }

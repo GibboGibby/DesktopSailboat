@@ -6,6 +6,11 @@
 
 #include "Window.h"
 #include "Renderer.h"
+#include <functional>
+
+typedef std::function<void()> VoidCallback;
+
+class ParticleSystem;
 
 class GuiRenderer
 {
@@ -15,7 +20,36 @@ public:
 
 
 	void NewFrame();
+
+	void SetCallbacks(VoidCallback spawnParticle);
+
+	void SetParticleSystem(std::shared_ptr<ParticleSystem> ps) { particleSystem = ps; }
+
+	void DrawFrame();
+
 	void Render(const std::shared_ptr<Renderer> renderer);
 
+	const bool MovingWindow() const { return movingWindow; }
+
 public:
+
+	float xOffset = 0;
+	float yOffset = 0;
+
+private:
+	void ResetToDefaultButton(size_t offset, size_t size);
+private:
+	int tabNumber = 0;
+
+	// Callbacks
+	VoidCallback SpawnParticle;
+
+	Vector2 startPos;
+
+	bool movingWindow = false;
+
+	std::shared_ptr<Window> window;
+
+	std::shared_ptr<ParticleSystem> particleSystem;
+	int buttonId = 0;
 };
