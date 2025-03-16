@@ -85,7 +85,7 @@ void ParticleSystem::Render()
 	{
 		Particle& particle = particles[i];
 		Vector2 pos = Position();
-		renderer->DrawFilledCircle(SDL_Point{ (int)(pb.topLeft.x + particle.x.x), (int)(pb.topLeft.y + particle.x.y) }, H / 2, SDL_Color{ 51, 153, 255, 255 });
+		renderer->DrawFilledCircle(SDL_Point{ (int)(pb.topLeft.x + particle.x.x), (int)(pb.topLeft.y + particle.x.y) }, SIMULATION.KernelHeight / 2, SDL_Color{ 51, 153, 255, 255 });
 	}
 	
 	/*
@@ -162,9 +162,9 @@ void ParticleSystem::SpawnParticle()
 	else
 	{
 		unsigned int placed = 0;
-		for (float y = HEIGHT / 1.5f - HEIGHT / 5.f; y < HEIGHT / 1.5f + HEIGHT / 5.f; y += H * 0.95f)
+		for (float y = HEIGHT / 1.5f - HEIGHT / 5.f; y < HEIGHT / 1.5f + HEIGHT / 5.f; y += SIMULATION.KernelHeight * 0.95f)
 		{
-			for (float x = WIDTH / 2.f - HEIGHT / 5.f; x <= WIDTH / 2.f + HEIGHT / 5.f; x += H * 0.95f)
+			for (float x = WIDTH / 2.f - HEIGHT / 5.f; x <= WIDTH / 2.f + HEIGHT / 5.f; x += SIMULATION.KernelHeight * 0.95f)
 			{
 				if (placed++ < g_Settings.sim.BlockParticles && particles.size() < g_Settings.app.particleCount)
 				{
@@ -179,9 +179,9 @@ void ParticleSystem::InitSPH()
 {
 	double HEIGHT = g_Settings.app.boxHeight;
 	double WIDTH = g_Settings.app.boxWidth;
-	for (float y = EPS; y < HEIGHT - EPS * 2.0f; y += H)
+	for (float y = SIMULATION.EPS; y < HEIGHT - SIMULATION.EPS * 2.0f; y += SIMULATION.KernelHeight)
 	{
-		for (float x = WIDTH / 4; x <= WIDTH / 2; x += H)
+		for (float x = WIDTH / 4; x <= WIDTH / 2; x += SIMULATION.KernelHeight)
 		{
 			if (particles.size() < DAM_PARTICLES)
 			{
@@ -203,29 +203,29 @@ void ParticleSystem::Integrate()
 	for (auto& p : particles)
 	{
 		// forward Euler integration
-		p.v += DT * p.f / p.rho;
-		p.x += DT * p.v;
+		p.v += SIMULATION.DT * p.f / p.rho;
+		p.x += SIMULATION.DT * p.v;
 
 		// enforce boundary conditions
-		if (p.x(0) - EPS < 0.f)
+		if (p.x(0) - SIMULATION.EPS < 0.f)
 		{
-			p.v(0) *= BOUND_DAMPING;
-			p.x(0) = EPS;
+			p.v(0) *= SIMULATION.BoundDamping;
+			p.x(0) = SIMULATION.EPS;
 		}
-		if (p.x(0) + EPS > WIDTH)
+		if (p.x(0) + SIMULATION.EPS > WIDTH)
 		{
-			p.v(0) *= BOUND_DAMPING;
-			p.x(0) = WIDTH - EPS;
+			p.v(0) *= SIMULATION.BoundDamping;
+			p.x(0) = WIDTH - SIMULATION.EPS;
 		}
-		if (p.x(1) - EPS < 0.f)
+		if (p.x(1) - SIMULATION.EPS < 0.f)
 		{
-			p.v(1) *= BOUND_DAMPING;
-			p.x(1) = EPS;
+			p.v(1) *= SIMULATION.BoundDamping;
+			p.x(1) = SIMULATION.EPS;
 		}
-		if (p.x(1) + EPS > HEIGHT)
+		if (p.x(1) + SIMULATION.EPS > HEIGHT)
 		{
-			p.v(1) *= BOUND_DAMPING;
-			p.x(1) = HEIGHT - EPS;
+			p.v(1) *= SIMULATION.BoundDamping;
+			p.x(1) = HEIGHT - SIMULATION.EPS;
 		}
 	}
 }
@@ -240,13 +240,13 @@ void ParticleSystem::ComputeDensityPressure()
 			Vector2d rij = pj.x - pi.x;
 			float r2 = rij.squaredNorm();
 
-			if (r2 < HSQ)
+			if (r2 < SIMULATION.HSQ)
 			{
 				// this computation is symmetric
-				pi.rho += MASS * POLY6 * pow(HSQ - r2, 3.f);
+				pi.rho += SIMULATION.Mass * SIMULATION.POLY6 * pow(SIMULATION.HSQ - r2, 3.f);
 			}
 		}
-		pi.p = GAS_CONST * (pi.rho - REST_DENS);
+		pi.p = SIMULATION.GasConst * (pi.rho - SIMULATION.RestDensity);
 	}
 }
 
@@ -266,15 +266,15 @@ void ParticleSystem::ComputeForces()
 			Vector2d rij = pj.x - pi.x;
 			float r = rij.norm();
 
-			if (r < H)
+			if (r < SIMULATION.KernelHeight)
 			{
 				// compute pressure force contribution
-				fpress += -rij.Normalized() * MASS * (pi.p + pj.p) / (2.f * pj.rho) * SPIKY_GRAD * pow(H - r, 3.f);
+				fpress += -rij.Normalized() * SIMULATION.Mass * (pi.p + pj.p) / (2.f * pj.rho) * SIMULATION.SPIKY_GRAD * pow(SIMULATION.KernelHeight - r, 3.f);
 				// compute viscosity force contribution
-				fvisc += VISC * MASS * (pj.v - pi.v) / pj.rho * VISC_LAP * (H - r);
+				fvisc += SIMULATION.Viscosity * SIMULATION.Mass * (pj.v - pi.v) / pj.rho * SIMULATION.VISC_LAP * (SIMULATION.KernelHeight - r);
 			}
 		}
-		Vector2d fgrav = Vector2d{ g_Settings.sim.Gravity.x, g_Settings.sim.Gravity.y } * MASS / pi.rho;
+		Vector2d fgrav = Vector2d{ g_Settings.sim.Gravity.x, g_Settings.sim.Gravity.y } * SIMULATION.Mass / pi.rho;
 		//Vector2d fgrav = G * MASS / pi.rho;
 		pi.f = fpress + fvisc + fgrav;
 	}

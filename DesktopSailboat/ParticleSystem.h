@@ -6,6 +6,10 @@
 #include "Particle.h"
 #define _USE_MATH_DEFINES
 #include "math.h"
+#include "Settings.h"
+
+#define SIMULATION g_Settings.sim
+#define APPLICATION g_Settings.app
 
 class Renderer;
 class Window;
@@ -24,6 +28,7 @@ struct ParticleBox
 	Vector2 bottomRight;
 };
 
+/*
 // solver parameters
 const static Vector2d G(0.f, 10.f);   // external (gravitational) forces
 const static float REST_DENS = 300.f;  // rest density
@@ -43,6 +48,7 @@ const static float VISC_LAP = 40.f / (M_PI * pow(H, 5.f));
 // simulation parameters
 const static float EPS = H; // boundary epsilon
 const static float BOUND_DAMPING = -0.5f;
+*/
 
 const int DAM_PARTICLES = 250;
 const static int BLOCK_PARTICLES = 100;

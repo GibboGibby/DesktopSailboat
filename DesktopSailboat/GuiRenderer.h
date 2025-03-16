@@ -8,6 +8,7 @@
 #include "Renderer.h"
 #include <functional>
 
+
 #define m_assert(expr, msg) assert(((void)(msg), (expr)))
 
 typedef std::function<void()> VoidCallback;

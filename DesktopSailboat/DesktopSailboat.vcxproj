@@ -148,6 +148,7 @@
     <ClCompile Include="ClickInput.cpp" />
     <ClCompile Include="EventHandler.cpp" />
     <ClCompile Include="GameObject.cpp" />
+    <ClCompile Include="GibGui.cpp" />
     <ClCompile Include="GTimer.cpp" />
     <ClCompile Include="GuiRenderer.cpp" />
     <ClCompile Include="ImGUI\imgui.cpp" />
@@ -177,6 +178,7 @@
     <ClInclude Include="ClickInput.h" />
     <ClInclude Include="EventHandler.h" />
     <ClInclude Include="GameObject.h" />
+    <ClInclude Include="GibGui.h" />
     <ClInclude Include="GTimer.h" />
     <ClInclude Include="GuiRenderer.h" />
     <ClInclude Include="ImGUI\imconfig.h" />

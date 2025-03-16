@@ -1,6 +1,7 @@
 #include "GuiRenderer.h"
 #include "ParticleSystem.h"
 #include "Settings.h"
+#include "GibGui.h"
 
 GuiRenderer::GuiRenderer(const std::shared_ptr<Window> window, const std::shared_ptr<Renderer> renderer)
 {
@@ -115,7 +116,7 @@ void GuiRenderer::DrawFrame()
 			// As changing every frame might be a bad idea
 			DesktopSailboat::SaveSettings();
 		}
-		ImGui::SliderFloat("Viscosity", &g_Settings.app.viscosity, 0.0f, 10.0f);
+		
 		ImGui::Checkbox("Limit FPS: ", &g_Settings.app.limitFPS);
 		ImGui::SameLine();
 		if (ImGui::InputInt("##FpsLimit", &g_Settings.app.fpsLimit))
@@ -154,6 +155,37 @@ void GuiRenderer::DrawFrame()
 		break;
 
 	case 2:
+		
+
+		//ImGui::SliderFloat2("Gravity", &g_Settings.sim.Gravity.x, -100.f, 100.f);
+		ImGui::DragFloat2("Gravity", &g_Settings.sim.Gravity.x, 0.1f,  -100.f, 1000.f);
+		//std::cout << offsetof(DesktopSailboat::Settings, sim.Gravity);
+		ResetToDefaultButton(offsetof(DesktopSailboat::Settings, sim.Gravity), sizeof(Vector2));
+		//ImGui::InputFloat2("Gravity", &g_Settings.sim.Gravity.x);
+
+
+		
+
+
+		GibGui::SettingsSlider("Rest Density: ", &g_Settings.sim.RestDensity, 0.f, 600.f, ImGui::SliderFloat);
+		GibGui::SettingsSlider("Gas Constant: ", &g_Settings.sim.GasConst, 0.f, 4000.f, ImGui::SliderFloat);
+		GibGui::SettingsSlider("Kernel Height: ", &g_Settings.sim.KernelHeight, 0.01f, 32.f, ImGui::SliderFloat);
+		GibGui::SettingsSlider("Mass: ", &g_Settings.sim.Mass, 0.1f, 25.f, ImGui::SliderFloat);
+		GibGui::SettingsSlider("Viscosity: ", &g_Settings.sim.Viscosity, 0.f, 1000.f, ImGui::SliderFloat);
+		GibGui::SettingsSlider("Time Step: ", &g_Settings.sim.DT, 0.0001f, 0.0099f, ImGui::SliderFloat, "%.4f");
+		GibGui::SettingsSlider("Bound Damping: ", &g_Settings.sim.BoundDamping, -1.f, 1.f, ImGui::SliderFloat);
+
+		SIMULATION.HSQ = SIMULATION.KernelHeight * SIMULATION.KernelHeight;
+		SIMULATION.EPS = SIMULATION.KernelHeight;
+
+		SIMULATION.POLY6 = static_cast<float>(4.f / (M_PI * pow(SIMULATION.KernelHeight, 8.f)));
+		SIMULATION.SPIKY_GRAD = static_cast<float>(- 10.f / (M_PI * pow(SIMULATION.KernelHeight, 5.f)));
+		SIMULATION.VISC_LAP = static_cast<float>(40.f / (M_PI * pow(SIMULATION.KernelHeight, 5.f)));
+
+
+		ImGui::NewLine();
+		ImGui::SliderInt("Particles To Spawn", &g_Settings.sim.BlockParticles, 1, 500);
+		ResetToDefaultButton(&g_Settings.sim.BlockParticles);
 		if (ImGui::Button("Spawn Another Particle"))
 		{
 			particleSystem->SpawnParticle();
@@ -162,20 +194,21 @@ void GuiRenderer::DrawFrame()
 		{
 			particleSystem->ResetParticles();
 		}
-
-		//ImGui::SliderFloat2("Gravity", &g_Settings.sim.Gravity.x, -100.f, 100.f);
-		ImGui::DragFloat2("Gravity", &g_Settings.sim.Gravity.x, 0.1f,  -100.f, 100.f);
-		//std::cout << offsetof(DesktopSailboat::Settings, sim.Gravity);
-		ResetToDefaultButton(offsetof(DesktopSailboat::Settings, sim.Gravity), sizeof(Vector2));
-		//ImGui::InputFloat2("Gravity", &g_Settings.sim.Gravity.x);
-
-
-		ImGui::SliderInt("Particles To Spawn", &g_Settings.sim.BlockParticles, 1, 500);
-		ResetToDefaultButton(&g_Settings.sim.BlockParticles);
-
 		ImGui::Text("Particle Count = %lli", particleSystem->GetNumberOfParticles());
+
+
+		if (ImGui::IsAnyItemActive)
+		{
+			DesktopSailboat::SaveSettings();
+		}
+
 	}
 
+	if (ImGui::IsAnyItemHovered())
+	{
+		window->DisableClickThrough();
+
+	}
 
 	ImGui::End();
 }

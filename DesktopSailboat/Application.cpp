@@ -74,20 +74,52 @@ void Application::Run()
 		SDL_GetWindowPosition(window->GetSDLWindow(), &wx, &wy);
 		clickInput->UpdateCurrentInput(flags);
 
+
 		if (clickInput->IsMouseButtonDown(LeftMouseButton))
 		{
-			//std::cout << "Left Mouse Button Down" << std::endl;
-		}
 
-		if (clickInput->IsMouseButton(LeftMouseButton))
-		{
-			//std::cout << "Left Mouse Button" << std::endl;
+
+			SDL_Rect temp_rect{ 1000,600,100,100 };
+			SetActiveWindow(window->GetWindowHandle());
+			if (IsPointInsideObject(mx, my, temp_rect))
+			{
+				//std::cout << "Clicking object" << std::endl;
+				//moving = true;
+				//xOffset = temp_rect.x - mx;
+				//yOffset = temp_rect.y - my;
+			}
+			else
+			{
+				int sizeX, sizeY;
+				SDL_GetWindowSize(window->GetSDLWindow(), &sizeX, &sizeY);
+				SDL_Rect screenRect{ wx, wy, sizeX, sizeY };
+				if (IsPointInsideObject(mx, my, screenRect))
+				{
+					SetActiveWindow(window->GetWindowHandle());
+					//SetForegroundWindow(window->GetWindowHandle());
+					window->EnableClickThrough();
+					//window->PassClickThrough(mx, my);
+				}
+				//std::cout << "Not Clicking Object" << std::endl;
+				//PassClickThrough(mx, my);
+			}
+
 		}
 
 		if (clickInput->IsMouseButtonUp(LeftMouseButton))
 		{
-			//std::cout << "Left Mouse Button Up" << std::endl;
+			//std::cout << "Mouse Button Up" << std::endl;
+			int sizeX, sizeY;
+			SDL_GetWindowSize(window->GetSDLWindow(), &sizeX, &sizeY);
+			SDL_Rect screenRect{ wx, wy, sizeX, sizeY };
+			if (IsPointInsideObject(mx, my, screenRect))
+			{
+				SetActiveWindow(window->GetWindowHandle());
+				//SetForegroundWindow(window->GetWindowHandle());
+				window->DisableClickThrough();
+			}
 		}
+
 
 		int sizeX, sizeY;
 		SDL_GetWindowSize(window->GetSDLWindow(), &sizeX, &sizeY);
@@ -165,49 +197,7 @@ void Application::Run()
 			
 		}
 
-		if (clickInput->IsMouseButtonDown(LeftMouseButton))
-		{
-
-
-			SDL_Rect temp_rect{ 1000,600,100,100 };
-			SetActiveWindow(window->GetWindowHandle());
-			if (IsPointInsideObject(mx, my, temp_rect))
-			{
-				//std::cout << "Clicking object" << std::endl;
-				//moving = true;
-				//xOffset = temp_rect.x - mx;
-				//yOffset = temp_rect.y - my;
-			}
-			else
-			{
-				int sizeX, sizeY;
-				SDL_GetWindowSize(window->GetSDLWindow(), &sizeX, &sizeY);
-				SDL_Rect screenRect{ wx, wy, sizeX, sizeY };
-				if (IsPointInsideObject(mx, my, screenRect))
-				{
-					SetActiveWindow(window->GetWindowHandle());
-					//SetForegroundWindow(window->GetWindowHandle());
-					window->EnableClickThrough();
-					//window->PassClickThrough(mx, my);
-				}
-				//std::cout << "Not Clicking Object" << std::endl;
-				//PassClickThrough(mx, my);
-			}
-
-		}
-
-		if (clickInput->IsMouseButtonUp(LeftMouseButton))
-		{
-			int sizeX, sizeY;
-			SDL_GetWindowSize(window->GetSDLWindow(), &sizeX, &sizeY);
-			SDL_Rect screenRect{ wx, wy, sizeX, sizeY };
-			if (IsPointInsideObject(mx, my, screenRect))
-			{
-				SetActiveWindow(window->GetWindowHandle());
-				//SetForegroundWindow(window->GetWindowHandle());
-				window->DisableClickThrough();
-			}
-		}
+	
 		
 		float localX, localY;
 		SDL_GetMouseState(&localX, &localY);
