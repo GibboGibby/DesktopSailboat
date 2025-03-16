@@ -32,6 +32,8 @@ void GuiRenderer::NewFrame()
 	ImGui_ImplSDLRenderer3_NewFrame();
 	ImGui_ImplSDL3_NewFrame();
 	ImGui::NewFrame();
+	
+	buttonId = 0;
 }
 
 void GuiRenderer::SetCallbacks(VoidCallback spawnParticle)
@@ -168,8 +170,8 @@ void GuiRenderer::DrawFrame()
 		//ImGui::InputFloat2("Gravity", &g_Settings.sim.Gravity.x);
 
 
-
 		ImGui::SliderInt("Particles To Spawn", &g_Settings.sim.BlockParticles, 1, 500);
+		ResetToDefaultButton(&g_Settings.sim.BlockParticles);
 
 		ImGui::Text("Particle Count = %lli", particleSystem->GetNumberOfParticles());
 	}
@@ -187,9 +189,21 @@ void GuiRenderer::Render(const std::shared_ptr<Renderer> renderer)
 void GuiRenderer::ResetToDefaultButton(size_t offset, size_t size)
 {
 	ImGui::SameLine();
-	if (ImGui::Button("Reset##" + buttonId))
+	ImGui::PushID(buttonId++);
+	if (ImGui::Button("Reset##"))
 	{
 		DesktopSailboat::Settings settings;
 		memcpy((char*) & g_Settings + offset, (const char*) & settings + offset, size);
 	}
+	ImGui::PopID();
+}
+
+template<typename T>
+void GuiRenderer::ResetToDefaultButton(T* settingsPointer)
+{
+	const char* global = (const char*)&g_Settings;
+	const char* variable = (const char*)settingsPointer;
+	//m_assert("Variable passed is not a member of the settings struct", variable - global < sizeof(DesktopSailboat::Settings) && variable - global > 0);
+	assert(variable - global < sizeof(DesktopSailboat::Settings) && variable - global > 0 && "Variable passed is not a member of the settings struct");
+	ResetToDefaultButton(variable - global, sizeof(T));
 }

@@ -8,6 +8,8 @@
 #include "Renderer.h"
 #include <functional>
 
+#define m_assert(expr, msg) assert(((void)(msg), (expr)))
+
 typedef std::function<void()> VoidCallback;
 
 class ParticleSystem;
@@ -31,6 +33,8 @@ public:
 
 	const bool MovingWindow() const { return movingWindow; }
 
+
+
 public:
 
 	float xOffset = 0;
@@ -38,6 +42,8 @@ public:
 
 private:
 	void ResetToDefaultButton(size_t offset, size_t size);
+	template<typename T>
+	void ResetToDefaultButton(T* settingsPointer);
 private:
 	int tabNumber = 0;
 
@@ -53,3 +59,4 @@ private:
 	std::shared_ptr<ParticleSystem> particleSystem;
 	int buttonId = 0;
 };
+
