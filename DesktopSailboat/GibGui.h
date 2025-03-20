@@ -39,7 +39,8 @@ namespace GibGui
 	}
 	template <typename T>
 	//void SettingsSlider(const char* text, T* val, T min, T max, std::function<bool(const char*, T*, T, T, const char*, ImGuiSliderFlags)> imguiFunc, const char* format = "%.3f", ImGuiSliderFlags flags = 0);
-	void SettingsSlider(
+	bool
+		SettingsSlider(
 		const char* label,
 		T* value,
 		T min,
@@ -53,23 +54,23 @@ namespace GibGui
 		ImGui::SameLine();
 
 		temp = "##" + temp;
-		sliderFunc(temp.c_str(), value, min, max, format, flags);
+		bool newTemp = sliderFunc(temp.c_str(), value, min, max, format, flags);
 
 		ResetToDefaultButton(value, temp.c_str());
+		return newTemp;
 	}
 
 	template <typename T>
-	void SettingsDrag(const char* label, T* value, T step, T min, T max, ImGuiDragFunc<T> dragFunc, const char* format = "%.3f", ImGuiSliderFlags flags = 0)
+	bool SettingsDrag(const char* label, T* value, T step, T min, T max, ImGuiDragFunc<T> dragFunc, const char* format = "%.3f", ImGuiSliderFlags flags = 0)
 	{
 		std::string temp = label;
 		ImGui::Text(temp.c_str());
 		ImGui::SameLine();
 		temp = "##" + temp;
-		dragFunc(temp.c_str(), value, step, min, max, format, flags);
+		bool newTemp = dragFunc(temp.c_str(), value, step, min, max, format, flags);
 
 		ResetToDefaultButton(value, temp.c_str());
+		return newTemp;
 	}
-
-	
 
 }

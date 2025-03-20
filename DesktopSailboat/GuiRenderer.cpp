@@ -152,6 +152,12 @@ void GuiRenderer::DrawFrame()
 		{
 			particleSystem->ResetBox();
 		}
+
+		if (GibGui::SettingsDrag("Box Scale: ", &g_Settings.app.boxScale, 0.01f, 2.0f, 0.01f, ImGui::DragFloat))
+		{
+			particleSystem->ResetBox();
+		}
+
 		break;
 
 	case 2:
@@ -167,7 +173,7 @@ void GuiRenderer::DrawFrame()
 		
 
 
-		GibGui::SettingsSlider("Rest Density: ", &g_Settings.sim.RestDensity, 0.f, 600.f, ImGui::SliderFloat);
+		if (GibGui::SettingsSlider("Rest Density: ", &g_Settings.sim.RestDensity, 0.f, 600.f, ImGui::SliderFloat)) { std::cout << "Rest Density changed\n"; }
 		GibGui::SettingsSlider("Gas Constant: ", &g_Settings.sim.GasConst, 0.f, 4000.f, ImGui::SliderFloat);
 		GibGui::SettingsSlider("Kernel Height: ", &g_Settings.sim.KernelHeight, 0.01f, 32.f, ImGui::SliderFloat);
 		GibGui::SettingsSlider("Mass: ", &g_Settings.sim.Mass, 0.1f, 25.f, ImGui::SliderFloat);
@@ -200,7 +206,9 @@ void GuiRenderer::DrawFrame()
 		if (ImGui::IsAnyItemActive)
 		{
 			DesktopSailboat::SaveSettings();
-		}
+		} 
+
+		
 
 	}
 

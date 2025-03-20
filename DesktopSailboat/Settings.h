@@ -19,6 +19,7 @@ namespace DesktopSailboat
 
 		float boxHeight = 200;
 		float boxWidth = 300;
+		float boxScale = 1.0f;
 	};
 
 	struct SimulationSettings
