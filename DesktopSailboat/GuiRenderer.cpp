@@ -156,6 +156,7 @@ void GuiRenderer::DrawFrame()
 		if (GibGui::SettingsDrag("Box Scale: ", &g_Settings.app.boxScale, 0.01f, 2.0f, 0.01f, ImGui::DragFloat))
 		{
 			particleSystem->ResetBox();
+			std::cout << "Box Being Reset" << std::endl;
 		}
 
 		break;

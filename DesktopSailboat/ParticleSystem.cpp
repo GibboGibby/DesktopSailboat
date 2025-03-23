@@ -104,11 +104,11 @@ void ParticleSystem::Render()
 
 void ParticleSystem::ResetBox()
 {
-	pb.topLeft = Position() + Vector2{ -g_Settings.app.boxWidth / 2.0f, -g_Settings.app.boxHeight / 2.0f };
-	pb.topRight = Position() + Vector2{ g_Settings.app.boxWidth / 2.0f, -g_Settings.app.boxHeight / 2.0f };
+	pb.topLeft = Position() + Vector2{ -g_Settings.app.boxWidth / 2.0f * g_Settings.app.boxScale, -g_Settings.app.boxHeight / 2.0f * g_Settings.app.boxScale };
+	pb.topRight = Position() + Vector2{ g_Settings.app.boxWidth / 2.0f * g_Settings.app.boxScale, -g_Settings.app.boxHeight / 2.0f * g_Settings.app.boxScale };
 
-	pb.bottomLeft = Position() + Vector2{ -g_Settings.app.boxWidth / 2.0f, g_Settings.app.boxHeight / 2.0f };
-	pb.bottomRight = Position() + Vector2{ g_Settings.app.boxWidth / 2.0f, g_Settings.app.boxHeight / 2.0f };
+	pb.bottomLeft = Position() + Vector2{ -g_Settings.app.boxWidth / 2.0f * g_Settings.app.boxScale, g_Settings.app.boxHeight / 2.0f * g_Settings.app.boxScale };
+	pb.bottomRight = Position() + Vector2{ g_Settings.app.boxWidth / 2.0f * g_Settings.app.boxScale, g_Settings.app.boxHeight / 2.0f * g_Settings.app.boxScale };
 }
 
 void ParticleSystem::SpawnCircle(int x, int y, float rad)
@@ -198,8 +198,8 @@ void ParticleSystem::InitSPH()
 
 void ParticleSystem::Integrate()
 {
-	double HEIGHT = g_Settings.app.boxHeight;
-	double WIDTH = g_Settings.app.boxWidth;
+	double HEIGHT = g_Settings.app.boxHeight * g_Settings.app.boxScale;
+	double WIDTH = g_Settings.app.boxWidth * g_Settings.app.boxScale;
 	for (auto& p : particles)
 	{
 		// forward Euler integration

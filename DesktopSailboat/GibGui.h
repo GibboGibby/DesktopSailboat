@@ -14,14 +14,14 @@ namespace GibGui
 	template<typename T>
 	using ImGuiDragFunc = bool(*)(const char*, T*, T, T, T, const char*, ImGuiSliderFlags);
 
-	void ResetToDefaultButton(size_t offset, size_t size, std::string buttonLabel);
+	bool ResetToDefaultButton(size_t offset, size_t size, std::string buttonLabel);
 	template <typename T>
-	void ResetToDefaultButton(T* settingsPointer, std::string buttonLabel) {
+	bool ResetToDefaultButton(T* settingsPointer, std::string buttonLabel) {
 		const char* global = (const char*)&g_Settings;
 		const char* variable = (const char*)settingsPointer;
 		//m_assert("Variable passed is not a member of the settings struct", variable - global < sizeof(DesktopSailboat::Settings) && variable - global > 0);
 		assert(variable - global < sizeof(DesktopSailboat::Settings) && variable - global > 0 && "Variable passed is not a member of the settings struct");
-		ResetToDefaultButton(variable - global, sizeof(T), buttonLabel);
+		return ResetToDefaultButton(variable - global, sizeof(T), buttonLabel);
 	}
 
 	void Button(std::string text, std::function<void()> func);
@@ -69,8 +69,7 @@ namespace GibGui
 		temp = "##" + temp;
 		bool newTemp = dragFunc(temp.c_str(), value, step, min, max, format, flags);
 
-		ResetToDefaultButton(value, temp.c_str());
-		return newTemp;
+		bool furtherTemp = ResetToDefaultButton(value, temp.c_str());
+		return newTemp || furtherTemp;
 	}
-
 }

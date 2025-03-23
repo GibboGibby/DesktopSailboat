@@ -27,7 +27,7 @@ void GibGui::SettingsSlider(const char* text, T* val, T min, T max, std::functio
 }
 */
 
-void GibGui::ResetToDefaultButton(size_t offset, size_t size, std::string buttonLabel)
+bool GibGui::ResetToDefaultButton(size_t offset, size_t size, std::string buttonLabel)
 {
 	ImGui::SameLine();
 	buttonLabel = "Reset##" + buttonLabel;
@@ -35,6 +35,8 @@ void GibGui::ResetToDefaultButton(size_t offset, size_t size, std::string button
 	{
 		DesktopSailboat::Settings settings;
 		memcpy((char*)&g_Settings + offset, (const char*)&settings + offset, size);
+		return true;
 	}
+	return false;
 }
 
