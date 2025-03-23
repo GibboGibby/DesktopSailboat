@@ -56,8 +56,8 @@ namespace GibGui
 		temp = "##" + temp;
 		bool newTemp = sliderFunc(temp.c_str(), value, min, max, format, flags);
 
-		ResetToDefaultButton(value, temp.c_str());
-		return newTemp;
+		bool furtherTemp = ResetToDefaultButton(value, temp.c_str());
+		return newTemp || furtherTemp;
 	}
 
 	template <typename T>
